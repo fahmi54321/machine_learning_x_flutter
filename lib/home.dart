@@ -5,18 +5,20 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
-/// ===============================
-/// STATE
-/// ===============================
-class SalaryPredictionState extends ChangeNotifier {
-  final TextEditingController controller = TextEditingController();
+class StartupPredictionState extends ChangeNotifier {
+  final rdController = TextEditingController();
+  final adminController = TextEditingController();
+  final marketingController = TextEditingController();
+
+  String selectedState = 'California';
 
   bool isLoading = false;
   bool isPressed = false;
 
-  double salary = 0;
-  String insight = '';
-  String chartBase64 = '';
+  double profit = 0;
+  String classification = '';
+  String description = '';
+  List<String> recommendations = [];
 
   void setPressed(bool value) {
     isPressed = value;
@@ -24,10 +26,11 @@ class SalaryPredictionState extends ChangeNotifier {
   }
 
   Future<void> predict() async {
-    final exp = double.tryParse(controller.text);
-    if (exp == null) return;
+    final rd = double.tryParse(rdController.text);
+    final admin = double.tryParse(adminController.text);
+    final marketing = double.tryParse(marketingController.text);
 
-    debugPrint('exp: $exp');
+    if (rd == null || admin == null || marketing == null) return;
 
     isLoading = true;
     notifyListeners();
@@ -36,17 +39,23 @@ class SalaryPredictionState extends ChangeNotifier {
       final res = await http.post(
         Uri.parse('http://10.0.2.2:5000/predict'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'years_experience': exp}),
+        body: jsonEncode({
+          "rd_spend": rd,
+          "administration": admin,
+          "marketing_spend": marketing,
+          "state": selectedState,
+        }),
       );
-      debugPrint('res: $res');
 
       final json = jsonDecode(res.body);
-      salary = json['predicted_salary'];
-      insight = json['insight'];
-      chartBase64 = json['chart_base64'];
+
+      profit = json['predicted_profit'];
+      classification = json['classification'];
+      description = json['description'];
+      recommendations = List<String>.from(json['recommendation']);
     } catch (e) {
-      debugPrint('error: $e');
-      insight = 'Unable to connect to prediction service.';
+      classification = 'Error';
+      description = 'Unable to connect to prediction service.';
     }
 
     isLoading = false;
@@ -54,17 +63,14 @@ class SalaryPredictionState extends ChangeNotifier {
   }
 }
 
-/// ===============================
-/// PAGE (WEB / DESKTOP)
-/// ===============================
-class SalaryPredictionWebPage extends StatelessWidget {
-  const SalaryPredictionWebPage({super.key});
+class StartupPredictionWebPage extends StatelessWidget {
+  const StartupPredictionWebPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => SalaryPredictionState(),
-      child: Consumer<SalaryPredictionState>(
+      create: (_) => StartupPredictionState(),
+      child: Consumer<StartupPredictionState>(
         builder: (context, state, _) {
           return Scaffold(
             body: Stack(
@@ -93,7 +99,7 @@ class SalaryPredictionWebPage extends StatelessWidget {
                       child: BackdropFilter(
                         filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
                         child: Container(
-                          width: 760, // desktop width
+                          width: 820,
                           padding: const EdgeInsets.all(32),
                           decoration: BoxDecoration(
                             color: Colors.white.withValues(alpha: 0.08),
@@ -101,11 +107,10 @@ class SalaryPredictionWebPage extends StatelessWidget {
                             border: Border.all(color: Colors.white30),
                           ),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               /// TITLE
                               Text(
-                                'Salary Prediction System',
+                                'Startup Profit Prediction',
                                 style: GoogleFonts.poppins(
                                   fontSize: 32,
                                   fontWeight: FontWeight.bold,
@@ -114,49 +119,39 @@ class SalaryPredictionWebPage extends StatelessWidget {
                               ),
                               const SizedBox(height: 8),
                               const Text(
-                                'Predict employee salary using Simple Linear Regression',
-                                style: TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 15,
-                                ),
+                                'Multiple Linear Regression • Business Insight System',
+                                style: TextStyle(color: Colors.white70),
                               ),
 
                               const SizedBox(height: 28),
 
-                              /// INPUT
-                              SizedBox(
-                                width: 360,
-                                child: TextField(
-                                  controller: state.controller,
-                                  keyboardType: TextInputType.number,
-                                  style: const TextStyle(color: Colors.white),
-                                  decoration: InputDecoration(
-                                    hintText: 'Years of Experience (e.g. 5.5)',
-                                    hintStyle: const TextStyle(
-                                      color: Colors.white70,
-                                    ),
-                                    filled: true,
-                                    fillColor: Colors.white.withValues(
-                                      alpha: 0.12,
-                                    ),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(14),
-                                      borderSide: BorderSide.none,
-                                    ),
+                              /// INPUTS
+                              Wrap(
+                                spacing: 16,
+                                runSpacing: 16,
+                                alignment: WrapAlignment.center,
+                                children: [
+                                  _input(state.rdController, 'R&D Spend'),
+                                  _input(
+                                    state.adminController,
+                                    'Administration',
                                   ),
-                                ),
+                                  _input(
+                                    state.marketingController,
+                                    'Marketing Spend',
+                                  ),
+                                  _dropdown(state),
+                                ],
                               ),
 
-                              const SizedBox(height: 20),
+                              const SizedBox(height: 24),
 
                               /// BUTTON
                               GestureDetector(
                                 onTapDown: (_) => state.setPressed(true),
                                 onTapUp: (_) => state.setPressed(false),
                                 onTapCancel: () => state.setPressed(false),
-                                onTap: () {
-                                  state.predict();
-                                },
+                                onTap: state.predict,
                                 child: AnimatedContainer(
                                   duration: const Duration(milliseconds: 180),
                                   padding: const EdgeInsets.symmetric(
@@ -168,20 +163,11 @@ class SalaryPredictionWebPage extends StatelessWidget {
                                         ? Colors.white.withValues(alpha: 0.18)
                                         : Colors.white.withValues(alpha: 0.28),
                                     borderRadius: BorderRadius.circular(14),
-                                    boxShadow: [
-                                      if (!state.isPressed)
-                                        const BoxShadow(
-                                          color: Colors.black26,
-                                          blurRadius: 12,
-                                          offset: Offset(0, 6),
-                                        ),
-                                    ],
                                   ),
                                   child: const Text(
-                                    'Predict Salary',
+                                    'Predict Profit',
                                     style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 16,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
@@ -190,47 +176,13 @@ class SalaryPredictionWebPage extends StatelessWidget {
 
                               const SizedBox(height: 30),
 
-                              /// RESULT
-                              if (state.isLoading)
-                                const CircularProgressIndicator(
-                                  color: Colors.white,
-                                )
-                              else if (state.salary > 0)
-                                Column(
-                                  children: [
-                                    Text(
-                                      'Estimated Annual Salary',
-                                      style: TextStyle(color: Colors.white70),
-                                    ),
-                                    const SizedBox(height: 6),
-                                    Text(
-                                      '\$${state.salary.toStringAsFixed(2)}',
-                                      style: const TextStyle(
-                                        fontSize: 28,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 12),
-                                    Text(
-                                      state.insight,
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
-                                        color: Colors.white70,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 24),
-                                    if (state.chartBase64.isNotEmpty)
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(16),
-                                        child: Image.memory(
-                                          base64Decode(state.chartBase64),
-                                          fit: BoxFit.contain,
-                                        ),
-                                      ),
-                                  ],
-                                ),
+                              state.isLoading
+                                  ? const CircularProgressIndicator(
+                                      color: Colors.white,
+                                    )
+                                  : state.profit > 0
+                                  ? _result(state)
+                                  : const SizedBox.shrink(),
                             ],
                           ),
                         ),
@@ -243,6 +195,89 @@ class SalaryPredictionWebPage extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+
+  Widget _input(TextEditingController c, String hint) {
+    return SizedBox(
+      width: 220,
+      child: TextField(
+        controller: c,
+        keyboardType: TextInputType.number,
+        style: const TextStyle(color: Colors.white),
+        decoration: InputDecoration(
+          hintText: hint,
+          hintStyle: const TextStyle(color: Colors.white70),
+          filled: true,
+          fillColor: Colors.white.withValues(alpha: 0.12),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: BorderSide.none,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _dropdown(StartupPredictionState state) {
+    return SizedBox(
+      width: 220,
+      child: DropdownButtonFormField<String>(
+        value: state.selectedState,
+        dropdownColor: const Color(0xff203a43),
+        items: const [
+          DropdownMenuItem(value: 'California', child: Text('California')),
+          DropdownMenuItem(value: 'New York', child: Text('New York')),
+          DropdownMenuItem(value: 'Florida', child: Text('Florida')),
+        ],
+        onChanged: (v) {
+          state.selectedState = v!;
+          state.notifyListeners();
+        },
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.white.withValues(alpha: 0.12),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: BorderSide.none,
+          ),
+        ),
+        style: const TextStyle(color: Colors.white),
+      ),
+    );
+  }
+
+  Widget _result(StartupPredictionState state) {
+    return Column(
+      key: ValueKey(state.profit),
+      children: [
+        Text(
+          '\$${state.profit.toStringAsFixed(2)}',
+          style: const TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          state.classification,
+          style: const TextStyle(
+            color: Colors.greenAccent,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 12),
+        Text(
+          state.description,
+          textAlign: TextAlign.center,
+          style: const TextStyle(color: Colors.white70),
+        ),
+        const SizedBox(height: 16),
+        ...state.recommendations.map(
+          (e) => Text('• $e', style: const TextStyle(color: Colors.white70)),
+        ),
+      ],
     );
   }
 }

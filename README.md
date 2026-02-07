@@ -1,4 +1,4 @@
-# linear_regression_flutter
+# machine_learning_x_flutter
 
 A new Flutter project.
 
