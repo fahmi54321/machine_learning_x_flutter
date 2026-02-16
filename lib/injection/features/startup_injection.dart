@@ -2,13 +2,11 @@ import 'package:machine_learning_x_flutter/data/datasources/startup/startup_data
 import 'package:machine_learning_x_flutter/data/datasources/startup/startup_dataspurce_impl.dart';
 import 'package:machine_learning_x_flutter/data/repositories/startup/startup_repositories_impl.dart';
 import 'package:machine_learning_x_flutter/domain/repositories/startup/startup_repository.dart';
-import 'package:machine_learning_x_flutter/domain/usecases/converter/converter_usecase_impl.dart';
 import 'package:machine_learning_x_flutter/domain/usecases/startup/startup_usecase_impl.dart';
-import 'package:machine_learning_x_flutter/domain/usecases/validation/startup/validation_startup_usecase_impl.dart';
-import 'package:machine_learning_x_flutter/application/pages/startup/provider/startup_provider.dart';
-import 'package:machine_learning_x_flutter/application/usecases/converter/converter_usecase.dart';
-import 'package:machine_learning_x_flutter/application/usecases/startup/startup_usecase.dart';
-import 'package:machine_learning_x_flutter/application/usecases/validation/validation_startup_usecase.dart';
+import 'package:machine_learning_x_flutter/domain/usecases/startup/startup/validation_startup_usecase_impl.dart';
+import 'package:machine_learning_x_flutter/presentation/pages/startup/provider/startup_provider.dart';
+import 'package:machine_learning_x_flutter/presentation/usecases/startup/startup_usecase.dart';
+import 'package:machine_learning_x_flutter/presentation/usecases/startup/validation/validation_startup_usecase.dart';
 import 'package:machine_learning_x_flutter/injection/injection.dart';
 
 void initStartupFeature() {
@@ -29,8 +27,6 @@ void initStartupFeature() {
   sl.registerLazySingleton<StartupUsecase>(
     () => StartupUsecaseImpl(startupRepository: sl()),
   );
-
-  sl.registerLazySingleton<ConverterUsecase>(() => ConverterUsecaseImpl());
 
   // REPO
   sl.registerLazySingleton<StartupRepository>(

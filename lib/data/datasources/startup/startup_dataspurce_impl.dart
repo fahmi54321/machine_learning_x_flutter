@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:machine_learning_x_flutter/data/datasources/startup/startup_datasource.dart';
 import 'package:machine_learning_x_flutter/data/exceptions/exceptions.dart';
 import 'package:machine_learning_x_flutter/data/models/startup/startup_model.dart';
-import 'package:machine_learning_x_flutter/application/core/params/startup/startup_params.dart';
+import 'package:machine_learning_x_flutter/presentation/core/params/startup/startup_params.dart';
 
 class StartupDataspurceImpl implements StartupDatasource {
   final http.Client client;
