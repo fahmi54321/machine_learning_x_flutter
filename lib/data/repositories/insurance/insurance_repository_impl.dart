@@ -10,7 +10,7 @@ import 'package:machine_learning_x_flutter/presentation/core/params/insurance/st
 
 class InsuranceRepositoryImpl implements InsuranceRepository {
   final InsuranceDatasource insuranceDatasource;
-  InsuranceRepositoryImpl({required this.insuranceDatasource});
+  const InsuranceRepositoryImpl({required this.insuranceDatasource});
   @override
   Future<Either<Failure, InsuranceEntity>> predictInsurance({
     required InsuranceParams params,

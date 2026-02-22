@@ -11,7 +11,7 @@ import 'package:machine_learning_x_flutter/presentation/core/params/insurance/st
 
 class InsuranceDatasourceImpl implements InsuranceDatasource {
   final http.Client client;
-  InsuranceDatasourceImpl({required this.client});
+  const InsuranceDatasourceImpl({required this.client});
   @override
   Future<InsuranceModel> predictInsurance({
     required InsuranceParams params,

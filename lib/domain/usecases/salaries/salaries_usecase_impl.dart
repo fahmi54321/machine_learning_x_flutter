@@ -6,7 +6,7 @@ import 'package:machine_learning_x_flutter/presentation/usecases/salaries/salari
 
 class SalariesUseCaseImpl implements SalariesUseCase {
   final SalariesRepositories salariesRepositories;
-  SalariesUseCaseImpl({required this.salariesRepositories});
+  const SalariesUseCaseImpl({required this.salariesRepositories});
 
   @override
   Future<Either<Failure, SalariesEntity>> loadPredict({

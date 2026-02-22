@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:machine_learning_x_flutter/presentation/pages/fashion/fashion_predictor_page.dart';
 import 'package:machine_learning_x_flutter/presentation/pages/insurance/insurance_page.dart';
 import 'package:machine_learning_x_flutter/presentation/pages/salaries/salaries_page.dart';
 import 'package:machine_learning_x_flutter/presentation/pages/startup/startup_page.dart';
@@ -16,7 +17,7 @@ class HomeState extends Equatable {
         InsuranceWrapper(),
         SalariesPageWrapper(),
         StartupWrapper(),
-        Container(),
+        FashionPredictorWrapper(),
       ],
     );
   }

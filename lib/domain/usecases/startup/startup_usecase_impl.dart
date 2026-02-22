@@ -8,7 +8,7 @@ import 'package:machine_learning_x_flutter/presentation/usecases/startup/startup
 
 class StartupUsecaseImpl implements StartupUsecase {
   final StartupRepository startupRepository;
-  StartupUsecaseImpl({required this.startupRepository});
+  const StartupUsecaseImpl({required this.startupRepository});
   @override
   Future<Either<Failure, StartupEntity>> predict({
     required PredictStartupParams params,

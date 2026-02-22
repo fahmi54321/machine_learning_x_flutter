@@ -10,7 +10,7 @@ import 'package:machine_learning_x_flutter/domain/repositories/salaries/salaries
 
 class SalariesRepositoriesImpl implements SalariesRepositories {
   final SalariesDatasources salariesDatasources;
-  SalariesRepositoriesImpl({required this.salariesDatasources});
+  const SalariesRepositoriesImpl({required this.salariesDatasources});
   @override
   Future<Either<Failure, SalariesEntity>> loadPredict({
     required String val,

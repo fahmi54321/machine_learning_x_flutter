@@ -8,7 +8,7 @@ import 'package:machine_learning_x_flutter/presentation/usecases/insurance/insur
 
 class InsuranceUsecaseImpl implements InsuranceUsecase {
   final InsuranceRepository insuranceRepository;
-  InsuranceUsecaseImpl({required this.insuranceRepository});
+  const InsuranceUsecaseImpl({required this.insuranceRepository});
   @override
   Future<Either<Failure, InsuranceEntity>> predictInsurance({
     required InsuranceParams params,

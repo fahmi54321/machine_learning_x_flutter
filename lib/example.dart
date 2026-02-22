@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -6,20 +7,15 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 class ExampleState extends ChangeNotifier {
-  final ageController = TextEditingController();
-  final bmiController = TextEditingController();
-  final childrenController = TextEditingController();
-
-  String selectedSex = 'male';
-  String selectedSmoker = 'no';
-  String selectedRegion = 'southeast';
-
   bool isLoading = false;
   bool isPressed = false;
 
-  double predictedCharges = 0;
-  String riskCategory = '';
+  String prediction = '';
   String description = '';
+  double confidence = 0;
+  String trueLabel = '';
+
+  Uint8List? imageBytes;
 
   void setPressed(bool v) {
     isPressed = v;
@@ -27,37 +23,23 @@ class ExampleState extends ChangeNotifier {
   }
 
   Future<void> predict() async {
-    final age = double.tryParse(ageController.text);
-    final bmi = double.tryParse(bmiController.text);
-    final children = double.tryParse(childrenController.text);
-
-    if (age == null || bmi == null || children == null) return;
-
     isLoading = true;
     notifyListeners();
 
     try {
-      final res = await http.post(
-        Uri.parse('http://10.0.2.2:5000/predict'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
-          "age": age,
-          "sex": selectedSex,
-          "bmi": bmi,
-          "children": children,
-          "smoker": selectedSmoker,
-          "region": selectedRegion,
-        }),
-      );
+      final res = await http.get(Uri.parse('http://10.0.2.2:5000/predict'));
 
       final json = jsonDecode(res.body);
 
-      predictedCharges = json['predicted_charges'];
-      riskCategory = json['risk_category'];
+      prediction = json['prediction'];
       description = json['description'];
+      confidence = json['confidence'];
+      trueLabel = json['true_label'];
+
+      imageBytes = base64Decode(json['image_base64']);
     } catch (e) {
-      riskCategory = 'Error';
-      description = 'Unable to connect to API service';
+      prediction = 'Error';
+      description = 'Failed to connect to Flask API';
     }
 
     isLoading = false;
@@ -77,12 +59,15 @@ class ExamplePage extends StatelessWidget {
           return Scaffold(
             body: Stack(
               children: [
-                /// Animated Gradient Background
-                AnimatedContainer(
-                  duration: const Duration(seconds: 5),
+                /// Background
+                Container(
                   decoration: const BoxDecoration(
                     gradient: LinearGradient(
-                      colors: [Color(0xff141E30), Color(0xff243B55)],
+                      colors: [
+                        Color(0xff0f2027),
+                        Color(0xff203a43),
+                        Color(0xff2c5364),
+                      ],
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                     ),
@@ -97,70 +82,28 @@ class ExamplePage extends StatelessWidget {
                       child: BackdropFilter(
                         filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
                         child: Container(
-                          width: 850,
+                          width: 700,
                           padding: const EdgeInsets.all(36),
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.08),
+                            color: Colors.white.withOpacity(0.08),
                             borderRadius: BorderRadius.circular(30),
                             border: Border.all(color: Colors.white24),
                           ),
                           child: Column(
                             children: [
-                              /// TITLE
                               const Text(
-                                'Insurance Cost Prediction',
+                                'Fashion MNIST Predictor',
                                 style: TextStyle(
                                   fontSize: 30,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white,
                                 ),
+                                textAlign: TextAlign.center,
                               ),
 
-                              const SizedBox(height: 30),
+                              const SizedBox(height: 24),
 
-                              /// INPUTS
-                              Wrap(
-                                spacing: 18,
-                                runSpacing: 18,
-                                children: [
-                                  _input(state.ageController, 'Age'),
-                                  _input(state.bmiController, 'BMI'),
-                                  _input(state.childrenController, 'Children'),
-                                  _dropdown(
-                                    value: state.selectedSex,
-                                    items: const ['male', 'female'],
-                                    onChanged: (v) {
-                                      state.selectedSex = v!;
-                                      state.notifyListeners();
-                                    },
-                                  ),
-                                  _dropdown(
-                                    value: state.selectedSmoker,
-                                    items: const ['yes', 'no'],
-                                    onChanged: (v) {
-                                      state.selectedSmoker = v!;
-                                      state.notifyListeners();
-                                    },
-                                  ),
-                                  _dropdown(
-                                    value: state.selectedRegion,
-                                    items: const [
-                                      'southeast',
-                                      'southwest',
-                                      'northeast',
-                                      'northwest',
-                                    ],
-                                    onChanged: (v) {
-                                      state.selectedRegion = v!;
-                                      state.notifyListeners();
-                                    },
-                                  ),
-                                ],
-                              ),
-
-                              const SizedBox(height: 28),
-
-                              /// BUTTON WITH SCALE ANIMATION
+                              /// BUTTON
                               GestureDetector(
                                 onTapDown: (_) => state.setPressed(true),
                                 onTapUp: (_) => state.setPressed(false),
@@ -184,7 +127,7 @@ class ExamplePage extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(14),
                                     ),
                                     child: const Text(
-                                      'Predict Insurance Cost',
+                                      'Generate Prediction',
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.w600,
@@ -196,26 +139,14 @@ class ExamplePage extends StatelessWidget {
 
                               const SizedBox(height: 30),
 
-                              /// RESULT WITH ANIMATED SWITCHER
+                              /// RESULT
                               AnimatedSwitcher(
                                 duration: const Duration(milliseconds: 500),
-                                transitionBuilder: (child, animation) =>
-                                    FadeTransition(
-                                      opacity: animation,
-                                      child: SlideTransition(
-                                        position: Tween(
-                                          begin: const Offset(0, 0.2),
-                                          end: Offset.zero,
-                                        ).animate(animation),
-                                        child: child,
-                                      ),
-                                    ),
                                 child: state.isLoading
                                     ? const CircularProgressIndicator(
-                                        key: ValueKey('loading'),
                                         color: Colors.white,
                                       )
-                                    : state.predictedCharges > 0
+                                    : state.imageBytes != null
                                     ? _result(state)
                                     : const SizedBox.shrink(),
                               ),
@@ -234,88 +165,124 @@ class ExamplePage extends StatelessWidget {
     );
   }
 
-  Widget _input(TextEditingController c, String hint) {
-    return SizedBox(
-      width: 200,
-      child: TextField(
-        controller: c,
-        keyboardType: TextInputType.number,
-        style: const TextStyle(color: Colors.white),
-        decoration: InputDecoration(
-          hintText: hint,
-          hintStyle: const TextStyle(color: Colors.white70),
-          filled: true,
-          fillColor: Colors.white.withValues(alpha: 0.1),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-            borderSide: BorderSide.none,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _dropdown({
-    required String value,
-    required List<String> items,
-    required Function(String?) onChanged,
-  }) {
-    return SizedBox(
-      width: 200,
-      child: DropdownButtonFormField<String>(
-        value: value,
-        items: items
-            .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-            .toList(),
-        dropdownColor: const Color(0xff243B55),
-        onChanged: onChanged,
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: Colors.white.withValues(alpha: 0.1),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-            borderSide: BorderSide.none,
-          ),
-        ),
-        style: const TextStyle(color: Colors.white),
-      ),
-    );
-  }
-
   Widget _result(ExampleState state) {
-    final riskColor = state.riskCategory == "Low Cost"
-        ? Colors.greenAccent
-        : state.riskCategory == "Medium Cost"
-        ? Colors.orangeAccent
-        : Colors.redAccent;
+    final isCorrect = state.prediction == state.trueLabel;
 
-    return Column(
-      key: ValueKey(state.predictedCharges),
-      children: [
-        Text(
-          '\$${state.predictedCharges.toStringAsFixed(2)}',
-          style: const TextStyle(
-            fontSize: 34,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+    final resultColor = isCorrect ? Colors.greenAccent : Colors.redAccent;
+
+    return TweenAnimationBuilder<double>(
+      key: ValueKey(state.prediction),
+      duration: const Duration(milliseconds: 600),
+      tween: Tween(begin: 0.8, end: 1),
+      curve: Curves.easeOutBack,
+      builder: (context, scale, child) {
+        return Transform.scale(scale: scale, child: child);
+      },
+      child: Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(24),
+          color: Colors.white.withOpacity(0.06),
+          border: Border.all(color: Colors.white24),
+          boxShadow: [
+            BoxShadow(
+              color: resultColor.withOpacity(0.25),
+              blurRadius: 30,
+              spreadRadius: 1,
+            ),
+          ],
         ),
-        const SizedBox(height: 8),
-        Text(
-          state.riskCategory,
-          style: TextStyle(
-            color: riskColor,
-            fontWeight: FontWeight.w600,
-            fontSize: 18,
-          ),
+        child: Column(
+          children: [
+            /// IMAGE
+            ClipRRect(
+              borderRadius: BorderRadius.circular(14),
+              child: Image.memory(
+                state.imageBytes!,
+                width: 180,
+                height: 180,
+                fit: BoxFit.contain,
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            /// STATUS BADGE (BENAR / SALAH)
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 400),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+              decoration: BoxDecoration(
+                color: resultColor.withOpacity(0.15),
+                borderRadius: BorderRadius.circular(50),
+                border: Border.all(color: resultColor),
+              ),
+              child: Text(
+                isCorrect ? "Correct Prediction" : "Incorrect Prediction",
+                style: TextStyle(
+                  color: resultColor,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            /// PREDICTED LABEL
+            Text(
+              state.prediction,
+              style: const TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+                letterSpacing: 1.1,
+              ),
+            ),
+
+            const SizedBox(height: 6),
+
+            /// SHOW TRUE LABEL IF WRONG
+            if (!isCorrect)
+              Text(
+                "Actual: ${state.trueLabel}",
+                style: const TextStyle(color: Colors.white70, fontSize: 15),
+              ),
+
+            const SizedBox(height: 18),
+
+            /// CONFIDENCE BAR
+            Column(
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Confidence ${(state.confidence * 100).toStringAsFixed(2)}%",
+                    style: const TextStyle(color: Colors.white70),
+                  ),
+                ),
+                const SizedBox(height: 6),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: LinearProgressIndicator(
+                    value: state.confidence,
+                    minHeight: 10,
+                    backgroundColor: Colors.white12,
+                    valueColor: AlwaysStoppedAnimation(resultColor),
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 20),
+
+            /// DESCRIPTION
+            Text(
+              state.description,
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Colors.white60, height: 1.5),
+            ),
+          ],
         ),
-        const SizedBox(height: 12),
-        Text(
-          state.description,
-          textAlign: TextAlign.center,
-          style: const TextStyle(color: Colors.white70),
-        ),
-      ],
+      ),
     );
   }
 }

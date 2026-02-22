@@ -10,7 +10,7 @@ import 'package:machine_learning_x_flutter/data/models/salaries/salaries_model.d
 
 class SalariesDatasourcesImpl implements SalariesDatasources {
   final http.Client client;
-  SalariesDatasourcesImpl({required this.client});
+  const SalariesDatasourcesImpl({required this.client});
   @override
   Future<SalariesModel> loadPredictFromApi({required String val}) async {
     final response = await client.post(

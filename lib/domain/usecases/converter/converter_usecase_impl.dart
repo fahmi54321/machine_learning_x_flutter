@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:machine_learning_x_flutter/presentation/usecases/converter/converter_usecase.dart';
 
 class ConverterUsecaseImpl implements ConverterUsecase {
@@ -26,6 +29,20 @@ class ConverterUsecaseImpl implements ConverterUsecase {
       }
     } catch (e) {
       return 0;
+    }
+  }
+
+  @override
+  Uint8List? base64ToUint8List({required String val}) {
+    try {
+      if (val.isNotEmpty) {
+        final data = base64Decode(val);
+        return data;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
     }
   }
 }

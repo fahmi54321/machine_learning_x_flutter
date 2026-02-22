@@ -11,7 +11,7 @@ import 'package:machine_learning_x_flutter/presentation/core/params/startup/star
 
 class StartupRepositoriesImpl implements StartupRepository {
   final StartupDatasource startupDatasource;
-  StartupRepositoriesImpl({required this.startupDatasource});
+  const StartupRepositoriesImpl({required this.startupDatasource});
   @override
   Future<Either<Failure, StartupEntity>> predict({
     required PredictStartupParams params,

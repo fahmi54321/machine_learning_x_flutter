@@ -25,14 +25,14 @@ class BottomNavHome extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _NavItem(icon: Icons.dashboard, label: "Dashboard", index: 0),
                 _NavItem(
                   icon: Icons.health_and_safety,
                   label: "Insurance",
-                  index: 1,
+                  index: 0,
                 ),
-                _NavItem(icon: Icons.analytics, label: "Analytics", index: 2),
-                _NavItem(icon: Icons.history, label: "History", index: 3),
+                _NavItem(icon: Icons.money, label: "Salary", index: 1),
+                _NavItem(icon: Icons.analytics, label: "Startup", index: 2),
+                _NavItem(icon: Icons.shop_rounded, label: "Fashion", index: 3),
 
                 GestureDetector(
                   onTap: () {
