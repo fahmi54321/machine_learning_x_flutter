@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+
 import 'package:machine_learning_x_flutter/injection/injection.dart';
 import 'package:machine_learning_x_flutter/presentation/app/app_navigator.dart';
 import 'package:machine_learning_x_flutter/presentation/core/listeners/global_ui_listener.dart';
+import 'package:machine_learning_x_flutter/presentation/core/theme/app_theme.dart';
+import 'package:machine_learning_x_flutter/presentation/core/widgets/keyboard/dismiss_keyboard.dart';
 import 'package:machine_learning_x_flutter/presentation/pages/home/home_page.dart';
 
 class MlApp extends StatelessWidget {
-  const MlApp({super.key});
+  final AppTheme appTheme;
+  const MlApp({super.key, required this.appTheme});
 
   @override
   Widget build(BuildContext context) {
@@ -13,9 +17,11 @@ class MlApp extends StatelessWidget {
       title: 'Flutter Demo',
       navigatorKey: appNavigatorKey,
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
+      theme: appTheme.buildDark(),
       builder: (context, child) {
-        return GlobalUiListener(overlayService: sl(), child: child!);
+        return DismissKeyboard(
+          child: GlobalUiListener(overlayService: sl(), child: child!),
+        );
       },
       home: HomeWrapper(),
     );

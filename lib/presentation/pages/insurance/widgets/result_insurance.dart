@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:machine_learning_x_flutter/presentation/core/theme/app_glass_theme.dart';
 import 'package:machine_learning_x_flutter/presentation/pages/insurance/provider/insurance_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -57,36 +58,35 @@ class _Result extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final riskColor = riskCategory == "Low Cost"
-        ? Colors.greenAccent
-        : riskCategory == "Medium Cost"
-        ? Colors.orangeAccent
-        : Colors.redAccent;
+    final theme = Theme.of(context);
+    final glass = theme.extension<AppGlassTheme>()!;
+    final riskColor = switch (riskCategory) {
+      "Low Cost" => glass.riskLowColor,
+      "Medium Cost" => glass.riskMediumColor,
+      _ => glass.riskHighColor,
+    };
     return Column(
       key: ValueKey(predictedCharges),
       children: [
         Text(
           '\$${predictedCharges.toStringAsFixed(2)}',
-          style: const TextStyle(
-            fontSize: 34,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+          style: theme.textTheme.titleLarge?.copyWith(fontSize: 34.0),
         ),
         const SizedBox(height: 8),
         Text(
           riskCategory,
-          style: TextStyle(
+          style: theme.textTheme.bodyLarge?.copyWith(
             color: riskColor,
-            fontWeight: FontWeight.w600,
-            fontSize: 18,
+            fontSize: 18.0,
           ),
         ),
         const SizedBox(height: 12),
         Text(
           description,
           textAlign: TextAlign.center,
-          style: const TextStyle(color: Colors.white70),
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: glass.descriptionTextColor,
+          ),
         ),
       ],
     );

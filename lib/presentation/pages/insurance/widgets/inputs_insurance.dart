@@ -90,6 +90,7 @@ class _Dropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return SizedBox(
       width: 200,
       child: DropdownButtonFormField<String>(
@@ -97,17 +98,8 @@ class _Dropdown extends StatelessWidget {
         items: items
             .map((e) => DropdownMenuItem(value: e, child: Text(e)))
             .toList(),
-        dropdownColor: const Color(0xff243B55),
         onChanged: onChanged,
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: Colors.white.withValues(alpha: 0.1),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-            borderSide: BorderSide.none,
-          ),
-        ),
-        style: const TextStyle(color: Colors.white),
+        style: theme.textTheme.bodyMedium,
       ),
     );
   }
@@ -125,20 +117,8 @@ class _Input extends StatelessWidget {
       width: 200,
       child: TextFormField(
         keyboardType: TextInputType.number,
-        style: const TextStyle(color: Colors.white),
         onChanged: onChanged,
-
-        decoration: InputDecoration(
-          hintText: hint,
-          hintStyle: const TextStyle(color: Colors.white70),
-          filled: true,
-          fillColor: Colors.white.withValues(alpha: 0.1),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-            borderSide: BorderSide.none,
-          ),
-          errorText: errorText,
-        ),
+        decoration: InputDecoration(hintText: hint, errorText: errorText),
       ),
     );
   }

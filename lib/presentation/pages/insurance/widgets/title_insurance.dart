@@ -5,13 +5,7 @@ class TitleInsurance extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Text(
-      'Insurance Prediction',
-      style: TextStyle(
-        fontSize: 26,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-      ),
-    );
+    final theme = Theme.of(context);
+    return Text('Insurance Prediction', style: theme.textTheme.titleLarge);
   }
 }

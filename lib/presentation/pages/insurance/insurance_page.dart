@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:machine_learning_x_flutter/presentation/core/theme/app_glass_theme.dart';
 import 'package:machine_learning_x_flutter/presentation/pages/insurance/provider/insurance_provider.dart';
 import 'package:machine_learning_x_flutter/presentation/pages/insurance/widgets/bg_insurance.dart';
 import 'package:machine_learning_x_flutter/presentation/pages/insurance/widgets/btn_insurance.dart';
@@ -32,6 +33,8 @@ class InsurancePredictionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final glass = Theme.of(context).extension<AppGlassTheme>()!;
+    final scheme = Theme.of(context).colorScheme;
     return Scaffold(
       body: Stack(
         children: [
@@ -43,14 +46,21 @@ class InsurancePredictionPage extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(30),
                 child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+                  filter: ImageFilter.blur(
+                    sigmaX: glass.sigmaX,
+                    sigmaY: glass.sigmaY,
+                  ),
                   child: Container(
                     width: 850,
                     padding: const EdgeInsets.all(36),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.08),
-                      borderRadius: BorderRadius.circular(30),
-                      border: Border.all(color: Colors.white24),
+                      color: scheme.surface.withValues(
+                        alpha: glass.backgroundAlpha,
+                      ),
+
+                      borderRadius: BorderRadius.circular(glass.radius),
+
+                      border: Border.all(color: scheme.outline),
                     ),
                     child: Column(
                       children: [
