@@ -1,41 +1,34 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
+import 'dart:developer';
 
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 
 import 'package:machine_learning_x_flutter/data/datasources/insurance/insurance_datasource.dart';
-import 'package:machine_learning_x_flutter/data/exceptions/exceptions.dart';
 import 'package:machine_learning_x_flutter/data/models/insurance/insurance_model.dart';
-import 'package:machine_learning_x_flutter/presentation/core/params/insurance/startup_params.dart';
+import 'package:machine_learning_x_flutter/data/network/dio_client.dart';
+import 'package:machine_learning_x_flutter/domain/entities/params/insurance/startup_params_entity.dart';
 
 class InsuranceDatasourceImpl implements InsuranceDatasource {
-  final http.Client client;
+  final DioClient client;
   const InsuranceDatasourceImpl({required this.client});
   @override
   Future<InsuranceModel> predictInsurance({
-    required InsuranceParams params,
+    required InsuranceParamsEntity params,
   }) async {
-    final response = await client.post(
-      Uri.parse('http://10.0.2.2:5000/predict'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
+    final response = await client.dio.post(
+      'http://10.0.2.2:5000/predict',
+      options: Options(headers: {'Accept': 'application/json'}),
+      data: {
         "age": params.age,
         "sex": params.sex,
         "bmi": params.bmi,
         "children": params.children,
         "smoker": params.smoker,
         "region": params.region,
-      }),
+      },
     );
 
-    debugPrint('responseBody: $response');
+    log('log 2 response: ${response.data}');
 
-    if (response.statusCode != 200) {
-      throw ServerException();
-    } else {
-      final responseBody = json.decode(response.body);
-      return InsuranceModel.fromJson(responseBody);
-    }
+    return InsuranceModel.fromJson(response.data as Map<String, dynamic>);
   }
 }

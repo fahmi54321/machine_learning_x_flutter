@@ -14,25 +14,21 @@ class _ButtonSalariesState extends State<ButtonSalaries> {
 
   @override
   Widget build(BuildContext context) {
-    final isEnabled = context.select((PredictCubit c) => c.isFormValid);
-
     return GestureDetector(
-      onTapDown: isEnabled ? (_) => setState(() => isPressed = true) : null,
-      onTapUp: isEnabled ? (_) => setState(() => isPressed = false) : null,
+      onTapDown: (_) => setState(() => isPressed = true),
+      onTapUp: (_) => setState(() => isPressed = false),
       onTapCancel: () => setState(() => isPressed = false),
-      onTap: isEnabled ? () => context.read<PredictCubit>().predict() : null,
+      onTap: () => context.read<PredictCubit>().predict(),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 180),
         padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 14),
         decoration: BoxDecoration(
-          color: isEnabled
-              ? (isPressed
-                    ? Colors.white.withValues(alpha: 0.18)
-                    : Colors.white.withValues(alpha: 0.28))
-              : Colors.white.withValues(alpha: 0.10),
+          color: (isPressed
+              ? Colors.white.withValues(alpha: 0.18)
+              : Colors.white.withValues(alpha: 0.28)),
           borderRadius: BorderRadius.circular(14),
           boxShadow: [
-            if (!isPressed && isEnabled)
+            if (!isPressed)
               const BoxShadow(
                 color: Colors.black26,
                 blurRadius: 12,

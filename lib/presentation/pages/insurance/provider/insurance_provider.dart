@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:machine_learning_x_flutter/domain/failures/failures.dart';
-import 'package:machine_learning_x_flutter/presentation/core/error/failure_messages.dart';
 
+import 'package:machine_learning_x_flutter/domain/entities/params/insurance/startup_params_entity.dart';
+import 'package:machine_learning_x_flutter/presentation/app/app_state.dart';
+import 'package:machine_learning_x_flutter/presentation/core/error/ui_error.dart';
 import 'package:machine_learning_x_flutter/presentation/core/form/form_value.dart';
-import 'package:machine_learning_x_flutter/presentation/core/params/insurance/startup_params.dart';
 import 'package:machine_learning_x_flutter/presentation/pages/insurance/provider/insurance_state.dart';
 import 'package:machine_learning_x_flutter/presentation/usecases/converter/converter_usecase.dart';
 import 'package:machine_learning_x_flutter/presentation/usecases/insurance/insurance_usecase.dart';
@@ -13,10 +13,12 @@ class InsuranceProvider extends ChangeNotifier {
   final InsuranceValidationUsecase insuranceValidationUsecase;
   final InsuranceUsecase insuranceUsecase;
   final ConverterUsecase converterUsecase;
+  final AppState appState;
   InsuranceProvider({
     required this.insuranceValidationUsecase,
     required this.insuranceUsecase,
     required this.converterUsecase,
+    required this.appState,
   });
 
   InsuranceState _state = InsuranceState.initial();
@@ -47,21 +49,37 @@ class InsuranceProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool get isValid =>
-      _state.age.validationStatus == ValidationStatus.success &&
-      _state.bmi.validationStatus == ValidationStatus.success &&
-      _state.children.validationStatus == ValidationStatus.success;
+  bool get isValid {
+    if (_state.age.validationStatus != ValidationStatus.success) {
+      _handleAlert('Age tidak boleh kosong');
+      return false;
+    } else if (_state.bmi.validationStatus != ValidationStatus.success) {
+      _handleAlert('bmi tidak boleh kosong');
+      return false;
+    } else if (_state.children.validationStatus != ValidationStatus.success) {
+      _handleAlert('children tidak boleh kosong');
+      return false;
+    } else {
+      return true;
+    }
+  }
 
   Future<void> predict() async {
     if (!isValid) {
       return;
     }
 
+    debugPrint('masuk 1');
+
     _state = _state.copyWith(status: InsuranceStatus.loading);
     notifyListeners();
 
+    _handleLoader(true);
+
+    debugPrint('masuk 2');
+
     final failureOrSuccess = await insuranceUsecase.predictInsurance(
-      params: InsuranceParams(
+      params: InsuranceParamsEntity(
         age: converterUsecase.stringToInt(value: _state.age.value),
         sex: _state.selectedSex,
         bmi: _state.bmi.value,
@@ -71,13 +89,16 @@ class InsuranceProvider extends ChangeNotifier {
       ),
     );
 
+    _handleLoader(false);
+
+    debugPrint('masuk 3');
+
     failureOrSuccess.fold(
       (failure) {
-        _state = _state.copyWith(
-          status: InsuranceStatus.error,
-          errorMessage: _mapFailureToMessage(failure),
-        );
+        _state = _state.copyWith(status: InsuranceStatus.error);
         notifyListeners();
+        _handleFailure(failure.message);
+        debugPrint('masuk 4, error" ${failure.message}');
       },
       (insurance) {
         _state = _state.copyWith(
@@ -85,25 +106,9 @@ class InsuranceProvider extends ChangeNotifier {
           insuranceEntity: insurance,
         );
         notifyListeners();
+        debugPrint('masuk 5');
       },
     );
-  }
-
-  String _mapFailureToMessage(Failure failure) {
-    switch (failure.runtimeType) {
-      case ServerFailure _:
-        {
-          return serverFailureMessage;
-        }
-      case CacheFailure _:
-        {
-          return cacheFailureMessage;
-        }
-      default:
-        {
-          return generalFailureMessage;
-        }
-    }
   }
 
   void updateSelectedSex(String? v) {
@@ -119,5 +124,17 @@ class InsuranceProvider extends ChangeNotifier {
   void updateSelectedRegion(String? v) {
     _state = _state.copyWith(selectedRegion: v);
     notifyListeners();
+  }
+
+  void _handleFailure(String message) {
+    appState.setError(UiError(source: ErrorSource.insurance, message: message));
+  }
+
+  void _handleAlert(String message) {
+    appState.setAlert(UiError(source: ErrorSource.insurance, message: message));
+  }
+
+  void _handleLoader(bool val) {
+    appState.setLoading(val);
   }
 }

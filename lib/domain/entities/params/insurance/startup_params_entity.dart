@@ -1,13 +1,13 @@
-import 'package:machine_learning_x_flutter/presentation/core/params/params.dart';
+import 'package:machine_learning_x_flutter/domain/entities/params/params_entity.dart';
 
-class InsuranceParams extends Params {
+class InsuranceParamsEntity extends ParamsEntity {
   final int age;
   final String sex;
   final String bmi;
   final int children;
   final String smoker;
   final String region;
-  InsuranceParams({
+  InsuranceParamsEntity({
     required this.age,
     required this.sex,
     required this.bmi,

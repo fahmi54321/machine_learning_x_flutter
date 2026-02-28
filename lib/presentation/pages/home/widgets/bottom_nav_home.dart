@@ -1,8 +1,11 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:machine_learning_x_flutter/presentation/pages/home/provider/home_provider.dart';
+import 'package:machine_learning_x_flutter/presentation/pages/food_vision/food_vision_page.dart';
 import 'package:provider/provider.dart';
+
+import 'package:machine_learning_x_flutter/presentation/pages/home/provider/home_provider.dart';
 
 class BottomNavHome extends StatelessWidget {
   const BottomNavHome({super.key});
@@ -97,17 +100,52 @@ class BottomNavHome extends StatelessWidget {
                       crossAxisSpacing: 18,
                       mainAxisSpacing: 18,
                       children: [
-                        _GridItem(icon: Icons.description, label: "Reports"),
-                        _GridItem(icon: Icons.psychology, label: "AI Lab"),
-                        _GridItem(icon: Icons.settings, label: "Settings"),
+                        _GridItem(
+                          icon: Icons.food_bank,
+                          label: "Food Vision",
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => FoodVisionWrapper(),
+                              ),
+                            );
+                          },
+                        ),
+                        _GridItem(
+                          icon: Icons.psychology,
+                          label: "AI Lab",
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        _GridItem(
+                          icon: Icons.settings,
+                          label: "Settings",
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                        ),
                         _GridItem(
                           icon: Icons.notifications,
                           label: "Notifications",
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
                         ),
-                        _GridItem(icon: Icons.receipt_long, label: "Logs"),
+                        _GridItem(
+                          icon: Icons.receipt_long,
+                          label: "Logs",
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                        ),
                         _GridItem(
                           icon: Icons.admin_panel_settings,
                           label: "Admin",
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
                         ),
                       ],
                     ),
@@ -124,15 +162,18 @@ class BottomNavHome extends StatelessWidget {
 
 class _GridItem extends StatelessWidget {
   final IconData icon;
+  final Function()? onTap;
   final String label;
-  const _GridItem({required this.icon, required this.label});
+  const _GridItem({
+    required this.icon,
+    required this.onTap,
+    required this.label,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.pop(context);
-      },
+      onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
         decoration: BoxDecoration(

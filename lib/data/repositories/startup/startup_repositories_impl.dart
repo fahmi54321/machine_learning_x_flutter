@@ -7,22 +7,26 @@ import 'package:machine_learning_x_flutter/data/mapper/startup/startup_model_map
 import 'package:machine_learning_x_flutter/domain/entities/startup/startup_entity.dart';
 import 'package:machine_learning_x_flutter/domain/failures/failures.dart';
 import 'package:machine_learning_x_flutter/domain/repositories/startup/startup_repository.dart';
-import 'package:machine_learning_x_flutter/presentation/core/params/startup/startup_params.dart';
+import 'package:machine_learning_x_flutter/domain/entities/params/startup/startup_params_entity.dart';
 
 class StartupRepositoriesImpl implements StartupRepository {
   final StartupDatasource startupDatasource;
   const StartupRepositoriesImpl({required this.startupDatasource});
   @override
   Future<Either<Failure, StartupEntity>> predict({
-    required PredictStartupParams params,
+    required PredictStartupParamsEntity params,
   }) async {
     try {
       final result = await startupDatasource.predict(params: params);
       return right(result.toEntity());
-    } on ServerException catch (_) {
-      return left(ServerFailure());
+    } on UnauthorizedException catch (e) {
+      return Left(UnauthorizedFailure(e.message));
+    } on NotFoundException catch (e) {
+      return Left(NotFoundFailure(e.message));
+    } on NetworkException {
+      return Left(NetworkFailure());
     } catch (e) {
-      return left(GeneralFailure());
+      return Left(ServerFailure('Terjadi kesalahan'));
     }
   }
 }

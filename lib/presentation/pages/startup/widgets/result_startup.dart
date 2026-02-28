@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:machine_learning_x_flutter/presentation/pages/startup/provider/startup_provider.dart';
-import 'package:machine_learning_x_flutter/presentation/pages/startup/provider/startup_state.dart';
 import 'package:provider/provider.dart';
 
 class ResultStartup extends StatelessWidget {
@@ -8,8 +7,6 @@ class ResultStartup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading =
-        context.watch<StartupProvider>().state.status == StartupStatus.loading;
     final profit = context
         .watch<StartupProvider>()
         .state
@@ -30,9 +27,7 @@ class ResultStartup extends StatelessWidget {
         .state
         .startupEntity
         ?.recommendation;
-    return isLoading
-        ? const CircularProgressIndicator(color: Colors.white)
-        : (profit ?? 0) > 0
+    return (profit ?? 0) > 0
         ? Column(
             key: ValueKey(profit),
             children: [

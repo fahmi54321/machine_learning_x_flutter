@@ -45,5 +45,10 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>App membutuhkan akses kamera</string>
+
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>App membutuhkan akses galeri</string>
 </dict>
 </plist>

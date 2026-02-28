@@ -4,7 +4,7 @@ import 'package:machine_learning_x_flutter/presentation/usecases/startup/validat
 class ValidationStartupUsecaseImpl implements ValidationStartupUsecase {
   @override
   ValidationStatus adminFormValidation({required String? value}) {
-    ValidationStatus currentStatus = ValidationStatus.idle;
+    ValidationStatus currentStatus = ValidationStatus.initial;
     if (value == null || value.isEmpty) {
       currentStatus = ValidationStatus.error;
     } else {
@@ -16,7 +16,7 @@ class ValidationStartupUsecaseImpl implements ValidationStartupUsecase {
 
   @override
   ValidationStatus marketingFormValidation({required String? value}) {
-    ValidationStatus currentStatus = ValidationStatus.idle;
+    ValidationStatus currentStatus = ValidationStatus.initial;
     if (value == null || value.isEmpty) {
       currentStatus = ValidationStatus.error;
     } else {
@@ -28,7 +28,7 @@ class ValidationStartupUsecaseImpl implements ValidationStartupUsecase {
 
   @override
   ValidationStatus rdFormValidation({required String? value}) {
-    ValidationStatus currentStatus = ValidationStatus.idle;
+    ValidationStatus currentStatus = ValidationStatus.initial;
     if (value == null || value.isEmpty) {
       currentStatus = ValidationStatus.error;
     } else {

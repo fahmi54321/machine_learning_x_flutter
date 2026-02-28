@@ -1,22 +1,32 @@
 import 'package:get_it/get_it.dart';
 import 'package:machine_learning_x_flutter/injection/core_injection.dart';
 import 'package:machine_learning_x_flutter/injection/external_injection.dart';
+import 'package:machine_learning_x_flutter/injection/features/camera_injection.dart';
 import 'package:machine_learning_x_flutter/injection/features/converter_injection.dart';
 import 'package:machine_learning_x_flutter/injection/features/fashion_injection.dart';
+import 'package:machine_learning_x_flutter/injection/features/file_injection.dart';
+import 'package:machine_learning_x_flutter/injection/features/food_injection.dart';
 import 'package:machine_learning_x_flutter/injection/features/insurance_injection.dart';
+import 'package:machine_learning_x_flutter/injection/features/permission_injection.dart';
 import 'package:machine_learning_x_flutter/injection/features/salaries_injection.dart';
+import 'package:machine_learning_x_flutter/injection/features/service_injection.dart';
 import 'package:machine_learning_x_flutter/injection/features/startup_injection.dart';
 
 final sl = GetIt.I; // sl == Service Locator
 
 Future<void> init() async {
   await initExternal();
+  initServiceFeature();
   initCore();
   initConverterFeature();
+  initFileFeature();
+  initCameraFeature();
+  initPermissionFeature();
   initSalariesFeature();
   initStartupFeature();
   initInsuranceFeature();
   initFashionFeature();
+  initFoodFeature();
 }
 
 // Note:

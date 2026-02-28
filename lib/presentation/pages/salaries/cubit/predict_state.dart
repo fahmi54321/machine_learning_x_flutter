@@ -8,14 +8,12 @@ class PredictState extends Equatable {
   final FormValue<String> yearsOfExperience;
   final SalariesEntity? salariesEntity;
   final PredictStatus predictStatus;
-  final String? errorMessage;
   final Uint8List? visualizationImage;
 
   const PredictState({
     required this.yearsOfExperience,
     this.salariesEntity,
     required this.predictStatus,
-    required this.errorMessage,
     this.visualizationImage,
   });
 
@@ -25,7 +23,6 @@ class PredictState extends Equatable {
       yearsOfExperience,
       salariesEntity,
       predictStatus,
-      errorMessage,
       visualizationImage,
     ];
   }
@@ -34,10 +31,9 @@ class PredictState extends Equatable {
     return PredictState(
       yearsOfExperience: FormValue(
         value: '',
-        validationStatus: ValidationStatus.idle,
+        validationStatus: ValidationStatus.initial,
       ),
       predictStatus: PredictStatus.idle,
-      errorMessage: '',
     );
   }
 
@@ -45,14 +41,12 @@ class PredictState extends Equatable {
     FormValue<String>? yearsOfExperience,
     SalariesEntity? salariesEntity,
     PredictStatus? predictStatus,
-    String? errorMessage,
     Uint8List? visualizationImage,
   }) {
     return PredictState(
       yearsOfExperience: yearsOfExperience ?? this.yearsOfExperience,
       salariesEntity: salariesEntity ?? this.salariesEntity,
       predictStatus: predictStatus ?? this.predictStatus,
-      errorMessage: errorMessage ?? this.errorMessage,
       visualizationImage: visualizationImage ?? this.visualizationImage,
     );
   }

@@ -4,7 +4,7 @@ import 'package:machine_learning_x_flutter/presentation/usecases/salaries/valida
 class ValidationSalariesUsecaseImpl implements ValidationSalariesUsecase {
   @override
   ValidationStatus salariesValidation({required String? value}) {
-    ValidationStatus currentStatus = ValidationStatus.idle;
+    ValidationStatus currentStatus = ValidationStatus.initial;
     if (value == null || value.isEmpty) {
       currentStatus = ValidationStatus.error;
     } else {

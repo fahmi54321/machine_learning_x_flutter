@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:machine_learning_x_flutter/presentation/pages/insurance/provider/insurance_provider.dart';
-import 'package:machine_learning_x_flutter/presentation/pages/insurance/provider/insurance_state.dart';
 import 'package:provider/provider.dart';
 
 class ResultInsurance extends StatelessWidget {
@@ -8,9 +7,6 @@ class ResultInsurance extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isLoading =
-        context.watch<InsuranceProvider>().state.status ==
-        InsuranceStatus.loading;
     final predictedCharges = context
         .watch<InsuranceProvider>()
         .state
@@ -38,12 +34,7 @@ class ResultInsurance extends StatelessWidget {
           child: child,
         ),
       ),
-      child: isLoading
-          ? const CircularProgressIndicator(
-              key: ValueKey('loading'),
-              color: Colors.white,
-            )
-          : predictedCharges > 0
+      child: predictedCharges > 0
           ? _Result(
               riskCategory: riskCategory,
               predictedCharges: predictedCharges,
@@ -59,11 +50,10 @@ class _Result extends StatelessWidget {
   final double predictedCharges;
   final String description;
   const _Result({
-    Key? key,
     required this.riskCategory,
     required this.predictedCharges,
     required this.description,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

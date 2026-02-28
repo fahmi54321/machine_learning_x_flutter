@@ -12,7 +12,11 @@ import 'package:machine_learning_x_flutter/injection/injection.dart';
 void initSalariesFeature() {
   // STATE
   sl.registerFactory(
-    () => PredictCubit(validationSalariesUsecase: sl(), salariesUseCase: sl()),
+    () => PredictCubit(
+      validationSalariesUsecase: sl(),
+      salariesUseCase: sl(),
+      appState: sl(),
+    ),
   );
 
   // USECASE

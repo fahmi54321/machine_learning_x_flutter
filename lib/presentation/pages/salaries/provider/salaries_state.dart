@@ -5,8 +5,8 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 import 'package:machine_learning_x_flutter/domain/entities/salaries/salaries_entity.dart';
-import 'package:machine_learning_x_flutter/domain/failures/failures.dart';
-import 'package:machine_learning_x_flutter/presentation/core/error/failure_messages.dart';
+import 'package:machine_learning_x_flutter/presentation/app/app_state.dart';
+import 'package:machine_learning_x_flutter/presentation/core/error/ui_error.dart';
 import 'package:machine_learning_x_flutter/presentation/core/form/form_value.dart';
 import 'package:machine_learning_x_flutter/presentation/pages/salaries/cubit/predict_cubit.dart';
 import 'package:machine_learning_x_flutter/presentation/usecases/salaries/salaries_usecase.dart';
@@ -15,20 +15,21 @@ import 'package:machine_learning_x_flutter/presentation/usecases/salaries/valida
 class SalariesState extends ChangeNotifier {
   final ValidationSalariesUsecase validationSalariesUsecase;
   final SalariesUseCase salariesUseCase;
+  final AppState appState;
   final GlobalKey formKey = GlobalKey();
 
   SalariesState({
     required this.validationSalariesUsecase,
     required this.salariesUseCase,
+    required this.appState,
   });
 
   FormValue<String> yearsOfExperience = FormValue(
     value: '',
-    validationStatus: ValidationStatus.idle,
+    validationStatus: ValidationStatus.initial,
   );
   SalariesEntity? salariesEntity;
   PredictStatus predictStatus = PredictStatus.idle;
-  String? errorMessage;
   Uint8List? visualizationImage;
 
   Future<void> yearsChanged(String val) async {
@@ -38,25 +39,36 @@ class SalariesState extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool get isFormValid =>
-      yearsOfExperience.validationStatus == ValidationStatus.success;
+  bool get isFormValid {
+    if (yearsOfExperience.validationStatus == ValidationStatus.success) {
+      return true;
+    } else {
+      _handleAlert('Years Of Experience tidak boleh kosong');
+      return false;
+    }
+  }
 
   Future<void> predict() async {
     if (!isFormValid) return;
 
     predictStatus = PredictStatus.loading;
-    errorMessage = '';
     salariesEntity = null;
     notifyListeners();
+
+    _handleLoader(true);
 
     final failureOrSalaries = await salariesUseCase.loadPredict(
       val: yearsOfExperience.value,
     );
 
+    _handleLoader(false);
+
     failureOrSalaries.fold(
       (failure) {
         predictStatus = PredictStatus.error;
-        errorMessage = _mapFailureToMessage(failure);
+        notifyListeners();
+
+        _handleFailure(failure.message);
       },
       (salary) {
         salariesEntity = salary;
@@ -64,24 +76,20 @@ class SalariesState extends ChangeNotifier {
         visualizationImage = base64Decode(
           salary.visualization?.imageBase64 ?? '',
         );
+        notifyListeners();
       },
     );
   }
 
-  String _mapFailureToMessage(Failure failure) {
-    switch (failure.runtimeType) {
-      case ServerFailure _:
-        {
-          return serverFailureMessage;
-        }
-      case CacheFailure _:
-        {
-          return cacheFailureMessage;
-        }
-      default:
-        {
-          return generalFailureMessage;
-        }
-    }
+  void _handleFailure(String message) {
+    appState.setError(UiError(source: ErrorSource.salaries, message: message));
+  }
+
+  void _handleAlert(String message) {
+    appState.setAlert(UiError(source: ErrorSource.salaries, message: message));
+  }
+
+  void _handleLoader(bool val) {
+    appState.setLoading(val);
   }
 }

@@ -18,10 +18,14 @@ class SalariesRepositoriesImpl implements SalariesRepositories {
     try {
       final result = await salariesDatasources.loadPredictFromApi(val: val);
       return right(result.toEntity());
-    } on ServerException catch (_) {
-      return left(ServerFailure());
+    } on UnauthorizedException catch (e) {
+      return Left(UnauthorizedFailure(e.message));
+    } on NotFoundException catch (e) {
+      return Left(NotFoundFailure(e.message));
+    } on NetworkException {
+      return Left(NetworkFailure());
     } catch (e) {
-      return left(GeneralFailure());
+      return Left(ServerFailure('Terjadi kesalahan'));
     }
   }
 }

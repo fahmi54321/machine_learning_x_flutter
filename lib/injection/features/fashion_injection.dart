@@ -10,8 +10,11 @@ import 'package:machine_learning_x_flutter/injection/injection.dart';
 void initFashionFeature() {
   // STATE
   sl.registerFactory(
-    () =>
-        FashionPredictorProvider(fashionUsecase: sl(), converterUsecase: sl()),
+    () => FashionPredictorProvider(
+      fashionUsecase: sl(),
+      converterUsecase: sl(),
+      appState: sl(),
+    ),
   );
 
   // USECASE

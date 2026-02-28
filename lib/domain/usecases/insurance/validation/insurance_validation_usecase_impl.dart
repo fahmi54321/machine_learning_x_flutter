@@ -4,7 +4,7 @@ import 'package:machine_learning_x_flutter/presentation/usecases/insurance/valid
 class InsuranceValidationUsecaseImpl implements InsuranceValidationUsecase {
   @override
   ValidationStatus ageValidation({required String? value}) {
-    ValidationStatus status = ValidationStatus.idle;
+    ValidationStatus status = ValidationStatus.initial;
     if (value == null || value.isEmpty) {
       status = ValidationStatus.error;
     } else {
@@ -16,7 +16,7 @@ class InsuranceValidationUsecaseImpl implements InsuranceValidationUsecase {
 
   @override
   ValidationStatus bmiValidation({required String? value}) {
-    ValidationStatus status = ValidationStatus.idle;
+    ValidationStatus status = ValidationStatus.initial;
     if (value == null || value.isEmpty) {
       status = ValidationStatus.error;
     } else {
@@ -28,7 +28,7 @@ class InsuranceValidationUsecaseImpl implements InsuranceValidationUsecase {
 
   @override
   ValidationStatus childrenValidation({required String? value}) {
-    ValidationStatus status = ValidationStatus.idle;
+    ValidationStatus status = ValidationStatus.initial;
     if (value == null || value.isEmpty) {
       status = ValidationStatus.error;
     } else {

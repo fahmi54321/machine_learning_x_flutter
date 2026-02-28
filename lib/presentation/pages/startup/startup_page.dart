@@ -19,6 +19,7 @@ class StartupWrapper extends StatelessWidget {
         validationStartupUsecase: sl(),
         startupUsecase: sl(),
         converterUsecase: sl(),
+        appState: sl(),
       ),
       child: StartupPage(),
     );

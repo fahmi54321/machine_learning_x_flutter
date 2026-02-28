@@ -20,6 +20,7 @@ class InsuranceWrapper extends StatelessWidget {
         insuranceValidationUsecase: sl(),
         insuranceUsecase: sl(),
         converterUsecase: sl(),
+        appState: sl(),
       ),
       child: const InsurancePredictionPage(),
     );

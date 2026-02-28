@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:machine_learning_x_flutter/presentation/pages/fashion/provider/fashion_predictor_provider.dart';
-import 'package:machine_learning_x_flutter/presentation/pages/fashion/provider/fashion_predictor_state.dart';
 import 'package:provider/provider.dart';
 
 class ResultFashion extends StatelessWidget {
@@ -10,9 +9,6 @@ class ResultFashion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isLoading =
-        context.watch<FashionPredictorProvider>().state.status ==
-        FashionPredictorStatus.loading;
     final imageBytes = context
         .watch<FashionPredictorProvider>()
         .state
@@ -32,9 +28,7 @@ class ResultFashion extends StatelessWidget {
         .description;
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 500),
-      child: isLoading
-          ? const CircularProgressIndicator(color: Colors.white)
-          : imageBytes != null
+      child: imageBytes != null
           ? _Result(
               prediction: prediction,
               trueLabel: trueLabel,

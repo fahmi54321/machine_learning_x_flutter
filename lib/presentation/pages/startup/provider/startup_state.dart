@@ -11,7 +11,6 @@ class StartupState extends Equatable {
   final FormValue<String> adminForm;
   final FormValue<String> marketingForm;
   final String selectedState;
-  final String errorMessage;
   final StartupEntity? startupEntity;
 
   const StartupState({
@@ -20,7 +19,6 @@ class StartupState extends Equatable {
     required this.adminForm,
     required this.marketingForm,
     required this.selectedState,
-    required this.errorMessage,
     this.startupEntity,
   });
 
@@ -28,21 +26,18 @@ class StartupState extends Equatable {
     return StartupState(
       status: StartupStatus.idle,
 
-      rdForm: FormValue(value: '', validationStatus: ValidationStatus.idle),
+      rdForm: FormValue(value: '', validationStatus: ValidationStatus.initial),
       marketingForm: FormValue(
         value: '',
-        validationStatus: ValidationStatus.idle,
+        validationStatus: ValidationStatus.initial,
       ),
-      adminForm: FormValue(value: '', validationStatus: ValidationStatus.idle),
+      adminForm: FormValue(
+        value: '',
+        validationStatus: ValidationStatus.initial,
+      ),
       selectedState: 'California',
-      errorMessage: '',
     );
   }
-
-  bool get isFormValid =>
-      (rdForm.validationStatus == ValidationStatus.success &&
-      adminForm.validationStatus == ValidationStatus.success &&
-      marketingForm.validationStatus == ValidationStatus.success);
 
   @override
   List<Object?> get props {
@@ -52,7 +47,6 @@ class StartupState extends Equatable {
       adminForm,
       marketingForm,
       selectedState,
-      errorMessage,
       startupEntity,
     ];
   }
@@ -67,7 +61,6 @@ class StartupState extends Equatable {
     FormValue<String>? adminForm,
     FormValue<String>? marketingForm,
     String? selectedState,
-    String? errorMessage,
     StartupEntity? startupEntity,
   }) {
     return StartupState(
@@ -76,7 +69,6 @@ class StartupState extends Equatable {
       adminForm: adminForm ?? this.adminForm,
       marketingForm: marketingForm ?? this.marketingForm,
       selectedState: selectedState ?? this.selectedState,
-      errorMessage: errorMessage ?? this.errorMessage,
       startupEntity: startupEntity ?? this.startupEntity,
     );
   }

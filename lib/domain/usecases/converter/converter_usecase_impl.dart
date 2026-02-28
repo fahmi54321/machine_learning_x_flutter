@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/cupertino.dart';
 import 'package:machine_learning_x_flutter/presentation/usecases/converter/converter_usecase.dart';
 
 class ConverterUsecaseImpl implements ConverterUsecase {
@@ -14,6 +16,7 @@ class ConverterUsecaseImpl implements ConverterUsecase {
         return 0;
       }
     } catch (e) {
+      debugPrint('Error converting string to double: $e');
       return 0;
     }
   }
@@ -28,6 +31,7 @@ class ConverterUsecaseImpl implements ConverterUsecase {
         return 0;
       }
     } catch (e) {
+      debugPrint('Error converting string to int: $e');
       return 0;
     }
   }
@@ -42,6 +46,21 @@ class ConverterUsecaseImpl implements ConverterUsecase {
         return null;
       }
     } catch (e) {
+      debugPrint('Error converting base64 to Uint8List: $e');
+      return null;
+    }
+  }
+
+  @override
+  File? filePathToFile({required String path}) {
+    if (path.isNotEmpty) {
+      try {
+        return File(path);
+      } catch (e) {
+        debugPrint('Error converting file path to File: $e');
+        return null;
+      }
+    } else {
       return null;
     }
   }

@@ -16,6 +16,7 @@ void initStartupFeature() {
       validationStartupUsecase: sl(),
       startupUsecase: sl(),
       converterUsecase: sl(),
+      appState: sl(),
     ),
   );
 

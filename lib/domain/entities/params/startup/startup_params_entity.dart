@@ -1,11 +1,11 @@
-import 'package:machine_learning_x_flutter/presentation/core/params/params.dart';
+import 'package:machine_learning_x_flutter/domain/entities/params/params_entity.dart';
 
-class PredictStartupParams extends Params {
+class PredictStartupParamsEntity extends ParamsEntity {
   final double rdSpend;
   final double administration;
   final double marketingSpend;
   final String state;
-  PredictStartupParams({
+  PredictStartupParamsEntity({
     required this.rdSpend,
     required this.administration,
     required this.marketingSpend,

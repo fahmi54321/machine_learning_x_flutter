@@ -11,7 +11,6 @@ class InsuranceState extends Equatable {
   final FormValue<String> bmi;
   final FormValue<String> children;
   final InsuranceEntity insuranceEntity;
-  final String errorMessage;
 
   final String selectedSex;
   final String selectedSmoker;
@@ -23,7 +22,6 @@ class InsuranceState extends Equatable {
     required this.bmi,
     required this.children,
     required this.insuranceEntity,
-    required this.errorMessage,
     required this.selectedSex,
     required this.selectedSmoker,
     required this.selectedRegion,
@@ -32,9 +30,12 @@ class InsuranceState extends Equatable {
 
   factory InsuranceState.initial() {
     return InsuranceState(
-      age: FormValue(value: '', validationStatus: ValidationStatus.idle),
-      bmi: FormValue(value: '', validationStatus: ValidationStatus.idle),
-      children: FormValue(value: '', validationStatus: ValidationStatus.idle),
+      age: FormValue(value: '', validationStatus: ValidationStatus.initial),
+      bmi: FormValue(value: '', validationStatus: ValidationStatus.initial),
+      children: FormValue(
+        value: '',
+        validationStatus: ValidationStatus.initial,
+      ),
       insuranceEntity: InsuranceEntity(
         description: '',
         predictedCharges: 0.0,
@@ -45,7 +46,6 @@ class InsuranceState extends Equatable {
       selectedRegion: 'southeast',
 
       status: InsuranceStatus.idle,
-      errorMessage: '',
     );
   }
 
@@ -54,7 +54,6 @@ class InsuranceState extends Equatable {
     FormValue<String>? bmi,
     FormValue<String>? children,
     InsuranceEntity? insuranceEntity,
-    String? errorMessage,
     String? selectedSex,
     String? selectedSmoker,
     String? selectedRegion,
@@ -68,7 +67,6 @@ class InsuranceState extends Equatable {
       bmi: bmi ?? this.bmi,
       children: children ?? this.children,
       insuranceEntity: insuranceEntity ?? this.insuranceEntity,
-      errorMessage: errorMessage ?? this.errorMessage,
       selectedSex: selectedSex ?? this.selectedSex,
       selectedSmoker: selectedSmoker ?? this.selectedSmoker,
       selectedRegion: selectedRegion ?? this.selectedRegion,
@@ -86,7 +84,6 @@ class InsuranceState extends Equatable {
       bmi,
       children,
       insuranceEntity,
-      errorMessage,
       selectedSex,
       selectedSmoker,
       selectedRegion,

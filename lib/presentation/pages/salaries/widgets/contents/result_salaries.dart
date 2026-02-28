@@ -9,9 +9,7 @@ class ResultSalaries extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = context.watch<PredictCubit>().state;
     final salariesEntity = state.salariesEntity;
-    if (state.predictStatus == PredictStatus.loading) {
-      return const CircularProgressIndicator(color: Colors.white);
-    } else if (state.predictStatus == PredictStatus.error) {
+    if (state.predictStatus == PredictStatus.error) {
       return Text(
         'Estimated Annual Salary',
         style: TextStyle(color: Colors.white70),

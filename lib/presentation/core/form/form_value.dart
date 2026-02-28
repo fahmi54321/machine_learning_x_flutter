@@ -10,4 +10,4 @@ class FormValue<T> with EquatableMixin {
   List<Object?> get props => [value, validationStatus];
 }
 
-enum ValidationStatus { error, success, idle }
+enum ValidationStatus { error, success, initial }

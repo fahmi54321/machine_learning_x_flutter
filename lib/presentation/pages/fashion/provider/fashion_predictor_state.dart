@@ -12,7 +12,6 @@ class FashionPredictorState extends Equatable {
   final String trueLabel;
   final double confidence;
   final Uint8List? imageBase64;
-  final String errorMessage;
   const FashionPredictorState({
     required this.status,
     required this.description,
@@ -20,7 +19,6 @@ class FashionPredictorState extends Equatable {
     required this.trueLabel,
     required this.confidence,
     required this.imageBase64,
-    required this.errorMessage,
   });
 
   factory FashionPredictorState.initial() {
@@ -31,7 +29,6 @@ class FashionPredictorState extends Equatable {
       trueLabel: '',
       confidence: 0,
       imageBase64: null,
-      errorMessage: '',
     );
   }
   @override
@@ -43,7 +40,6 @@ class FashionPredictorState extends Equatable {
       trueLabel,
       confidence,
       imageBase64,
-      errorMessage,
     ];
   }
 
@@ -54,7 +50,6 @@ class FashionPredictorState extends Equatable {
     String? trueLabel,
     double? confidence,
     Uint8List? imageBase64,
-    String? errorMessage,
   }) {
     return FashionPredictorState(
       status: status ?? this.status,
@@ -63,7 +58,6 @@ class FashionPredictorState extends Equatable {
       trueLabel: trueLabel ?? this.trueLabel,
       confidence: confidence ?? this.confidence,
       imageBase64: imageBase64 ?? this.imageBase64,
-      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 

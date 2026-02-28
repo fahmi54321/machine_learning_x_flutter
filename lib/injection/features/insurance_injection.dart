@@ -16,6 +16,7 @@ void initInsuranceFeature() {
       insuranceValidationUsecase: sl(),
       insuranceUsecase: sl(),
       converterUsecase: sl(),
+      appState: sl(),
     ),
   );
 

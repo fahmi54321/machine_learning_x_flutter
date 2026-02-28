@@ -15,10 +15,14 @@ class FashionRespositoryImpl implements FashionRepository {
     try {
       final result = await fashionDatasource.predict();
       return right(result.toEntity());
-    } on ServerException catch (_) {
-      return left(ServerFailure());
+    } on UnauthorizedException catch (e) {
+      return Left(UnauthorizedFailure(e.message));
+    } on NotFoundException catch (e) {
+      return Left(NotFoundFailure(e.message));
+    } on NetworkException {
+      return Left(NetworkFailure());
     } catch (e) {
-      return left(GeneralFailure());
+      return Left(ServerFailure('Terjadi kesalahan'));
     }
   }
 }

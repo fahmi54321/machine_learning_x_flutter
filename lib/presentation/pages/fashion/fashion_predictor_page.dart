@@ -18,6 +18,7 @@ class FashionPredictorWrapper extends StatelessWidget {
       create: (_) => FashionPredictorProvider(
         fashionUsecase: sl(),
         converterUsecase: sl(),
+        appState: sl(),
       ),
       child: FashionPredictorPage(),
     );

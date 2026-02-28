@@ -11,7 +11,10 @@ class MainHome extends StatelessWidget {
     final pages = context.watch<HomeProvider>().state.pages;
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 400),
-      child: currentIndex < 4 ? pages[currentIndex] : const SizedBox(),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 70.0, top: 20.0),
+        child: currentIndex < 4 ? pages[currentIndex] : const SizedBox(),
+      ),
     );
   }
 }
