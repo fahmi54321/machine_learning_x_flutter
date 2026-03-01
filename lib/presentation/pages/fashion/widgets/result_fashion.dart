@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:machine_learning_x_flutter/presentation/core/theme/app_glass_theme.dart';
 import 'package:machine_learning_x_flutter/presentation/pages/fashion/provider/fashion_predictor_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -26,6 +27,7 @@ class ResultFashion extends StatelessWidget {
         .watch<FashionPredictorProvider>()
         .state
         .description;
+
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 500),
       child: imageBytes != null
@@ -58,8 +60,12 @@ class _Result extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isCorrect = prediction == trueLabel;
+    final glass = Theme.of(context).extension<AppGlassTheme>()!;
+    final theme = Theme.of(context);
 
-    final resultColor = isCorrect ? Colors.greenAccent : Colors.redAccent;
+    final resultColor = isCorrect
+        ? glass.goodResultColor
+        : glass.badResultColor;
     return TweenAnimationBuilder<double>(
       key: ValueKey(prediction),
       duration: const Duration(milliseconds: 600),
@@ -72,8 +78,10 @@ class _Result extends StatelessWidget {
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
-          color: Colors.white.withValues(alpha: 0.06),
-          border: Border.all(color: Colors.white24),
+          color: theme.colorScheme.surface.withValues(
+            alpha: glass.backgroundAlpha,
+          ),
+          border: Border.all(color: theme.colorScheme.outline),
           boxShadow: [
             BoxShadow(
               color: resultColor.withValues(alpha: 0.25),
@@ -106,7 +114,8 @@ class _Result extends StatelessWidget {
               ),
               child: Text(
                 isCorrect ? "Correct Prediction" : "Incorrect Prediction",
-                style: TextStyle(
+
+                style: theme.textTheme.bodyMedium?.copyWith(
                   color: resultColor,
                   fontWeight: FontWeight.w600,
                 ),
@@ -117,12 +126,8 @@ class _Result extends StatelessWidget {
 
             Text(
               prediction,
-              style: const TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-                letterSpacing: 1.1,
-              ),
+
+              style: theme.textTheme.titleLarge?.copyWith(letterSpacing: 1.1),
             ),
 
             const SizedBox(height: 6),
@@ -130,7 +135,9 @@ class _Result extends StatelessWidget {
             if (!isCorrect)
               Text(
                 "Actual: $trueLabel",
-                style: const TextStyle(color: Colors.white70, fontSize: 15),
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: glass.descriptionTextColor,
+                ),
               ),
 
             const SizedBox(height: 18),
@@ -141,7 +148,9 @@ class _Result extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     "Confidence ${(confidence * 100).toStringAsFixed(2)}%",
-                    style: const TextStyle(color: Colors.white70),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: glass.descriptionTextColor,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 6),
@@ -150,7 +159,6 @@ class _Result extends StatelessWidget {
                   child: LinearProgressIndicator(
                     value: confidence,
                     minHeight: 10,
-                    backgroundColor: Colors.white12,
                     valueColor: AlwaysStoppedAnimation(resultColor),
                   ),
                 ),
@@ -162,7 +170,10 @@ class _Result extends StatelessWidget {
             Text(
               description,
               textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.white60, height: 1.5),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: glass.descriptionTextColor,
+                height: 1.5,
+              ),
             ),
           ],
         ),

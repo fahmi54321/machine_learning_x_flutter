@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:machine_learning_x_flutter/presentation/core/theme/app_glass_theme.dart';
 import 'package:machine_learning_x_flutter/presentation/pages/salaries/cubit/predict_cubit.dart';
 
 class ResultSalaries extends StatelessWidget {
@@ -9,32 +10,36 @@ class ResultSalaries extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = context.watch<PredictCubit>().state;
     final salariesEntity = state.salariesEntity;
+    final theme = Theme.of(context);
+    final glass = Theme.of(context).extension<AppGlassTheme>()!;
     if (state.predictStatus == PredictStatus.error) {
       return Text(
         'Estimated Annual Salary',
-        style: TextStyle(color: Colors.white70),
+        style: theme.textTheme.bodyMedium?.copyWith(
+          color: glass.descriptionTextColor,
+        ),
       );
     } else {
       return Column(
         children: [
           Text(
             'Estimated Annual Salary',
-            style: TextStyle(color: Colors.white70),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: glass.descriptionTextColor,
+            ),
           ),
           const SizedBox(height: 6),
           Text(
             '\$${salariesEntity?.predictionEntity?.salary.toStringAsFixed(2)}',
-            style: const TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+            style: theme.textTheme.titleLarge,
           ),
           const SizedBox(height: 12),
           Text(
             salariesEntity?.explanation ?? "-",
             textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.white70, fontSize: 14),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: glass.descriptionTextColor,
+            ),
           ),
           const SizedBox(height: 24),
           if (state.visualizationImage != null)

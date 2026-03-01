@@ -14,16 +14,8 @@ class InputSalaries extends StatelessWidget {
         width: 360,
         child: TextFormField(
           keyboardType: TextInputType.number,
-          style: const TextStyle(color: Colors.white),
           decoration: InputDecoration(
             hintText: 'Years of Experience (e.g. 5.5)',
-            hintStyle: const TextStyle(color: Colors.white70),
-            filled: true,
-            fillColor: Colors.white.withValues(alpha: 0.12),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide: BorderSide.none,
-            ),
             errorText:
                 context
                         .read<PredictCubit>()

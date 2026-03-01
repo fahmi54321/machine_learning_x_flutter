@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:machine_learning_x_flutter/presentation/core/theme/app_glass_theme.dart';
 import 'package:machine_learning_x_flutter/presentation/pages/salaries/cubit/predict_cubit.dart';
 import 'package:machine_learning_x_flutter/presentation/pages/salaries/widgets/background_salaries.dart';
 import 'package:machine_learning_x_flutter/presentation/pages/salaries/widgets/contents/button_salaries.dart';
@@ -27,47 +28,48 @@ class SalariesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final glass = Theme.of(context).extension<AppGlassTheme>()!;
+    final theme = Theme.of(context);
     return Scaffold(
       body: Stack(
         children: [
-          /// BACKGROUND
           BackgroundSalaries(),
 
-          /// CONTENT
           Center(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(32),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(28),
                 child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
+                  filter: ImageFilter.blur(
+                    sigmaX: glass.sigmaX,
+                    sigmaY: glass.sigmaY,
+                  ),
                   child: Container(
-                    width: 760, // desktop width
+                    width: 760,
                     padding: const EdgeInsets.all(32),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.08),
+                      color: theme.colorScheme.surface.withValues(
+                        alpha: glass.backgroundAlpha,
+                      ),
                       borderRadius: BorderRadius.circular(28),
-                      border: Border.all(color: Colors.white30),
+                      border: Border.all(color: theme.colorScheme.outline),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        /// TITLE
                         TitleSalaries(),
 
                         const SizedBox(height: 28),
 
-                        /// INPUT
                         InputSalaries(),
 
                         const SizedBox(height: 20),
 
-                        /// BUTTON
                         ButtonSalaries(),
 
                         const SizedBox(height: 30),
 
-                        /// RESULT
                         ResultSalaries(),
                       ],
                     ),

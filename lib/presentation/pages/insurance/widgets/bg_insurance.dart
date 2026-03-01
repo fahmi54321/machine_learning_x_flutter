@@ -9,7 +9,7 @@ class BgInsurance extends StatelessWidget {
     final glass = Theme.of(context).extension<AppGlassTheme>()!;
     return AnimatedContainer(
       duration: const Duration(seconds: 5),
-      decoration: BoxDecoration(gradient: glass.backgroundGradient),
+      decoration: BoxDecoration(gradient: glass.secondaryGradient),
     );
   }
 }

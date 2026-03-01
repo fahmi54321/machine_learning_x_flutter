@@ -1,25 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:machine_learning_x_flutter/presentation/core/theme/app_glass_theme.dart';
 
 class TitleSalaries extends StatelessWidget {
   const TitleSalaries({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final glass = Theme.of(context).extension<AppGlassTheme>()!;
     return Column(
       children: [
-        Text(
-          'Salary Prediction System',
-          style: GoogleFonts.poppins(
-            fontSize: 32,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
+        Text('Salary Prediction System', style: theme.textTheme.displayLarge),
         const SizedBox(height: 8),
-        const Text(
+        Text(
           'Predict employee salary using Simple Linear Regression',
-          style: TextStyle(color: Colors.white70, fontSize: 15),
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: glass.descriptionTextColor,
+          ),
         ),
       ],
     );

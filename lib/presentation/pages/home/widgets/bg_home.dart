@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:machine_learning_x_flutter/presentation/core/theme/app_glass_theme.dart';
 
 class BgHome extends StatelessWidget {
   const BgHome({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final glass = Theme.of(context).extension<AppGlassTheme>()!;
     return AnimatedContainer(
       duration: const Duration(seconds: 5),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xff141E30), Color(0xff243B55)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-      ),
+      decoration: BoxDecoration(gradient: glass.secondaryGradient),
     );
   }
 }

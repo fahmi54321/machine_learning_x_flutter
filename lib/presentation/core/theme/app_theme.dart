@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:machine_learning_x_flutter/presentation/core/theme/app_glass_theme.dart';
 
 // ========================
@@ -26,6 +27,7 @@ class AppTheme {
       brightness: Brightness.dark,
       outline: Colors.white24,
       surface: Colors.white,
+      onSurface: Colors.white,
     );
 
     return ThemeData(
@@ -39,21 +41,26 @@ class AppTheme {
       // ========================
       textTheme:
           TextTheme(
-            displayLarge: const TextStyle(
+            displayLarge: GoogleFonts.poppins(
               fontSize: 32,
               fontWeight: FontWeight.bold,
             ),
-            titleLarge: const TextStyle(
+            titleLarge: GoogleFonts.poppins(
               fontSize: 26,
               fontWeight: FontWeight.bold,
             ),
-            bodyLarge: const TextStyle(fontSize: 16),
-            bodyMedium: const TextStyle(fontSize: 14),
-            bodySmall: const TextStyle(fontSize: 12),
+            bodyLarge: GoogleFonts.poppins(fontSize: 16),
+            bodyMedium: GoogleFonts.poppins(fontSize: 14),
+            bodySmall: GoogleFonts.poppins(fontSize: 12),
           ).apply(
             bodyColor: colorScheme.onSurface,
             displayColor: colorScheme.onSurface,
           ),
+
+      // ========================
+      // Icon
+      // ========================
+      iconTheme: IconThemeData(color: Colors.white70),
 
       // ========================
       // INPUT FIELD
@@ -65,7 +72,7 @@ class AppTheme {
           horizontal: 20,
           vertical: 16,
         ),
-        hintStyle: TextStyle(
+        hintStyle: GoogleFonts.poppins(
           color: colorScheme.onSurface.withValues(alpha: 0.6),
           fontSize: 12.0,
         ),
@@ -97,7 +104,7 @@ class AppTheme {
       // DROPDOWN
       // ========================
       dropdownMenuTheme: DropdownMenuThemeData(
-        textStyle: TextStyle(color: colorScheme.onSurface),
+        textStyle: GoogleFonts.poppins(color: colorScheme.onSurface),
       ),
 
       // ========================
@@ -113,9 +120,16 @@ class AppTheme {
       // ========================
       snackBarTheme: SnackBarThemeData(
         backgroundColor: colorScheme.surface,
-        contentTextStyle: TextStyle(color: colorScheme.onSurface),
+        contentTextStyle: GoogleFonts.poppins(color: colorScheme.onSurface),
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      ),
+
+      // ========================
+      // ProgressIndicator
+      // ========================
+      progressIndicatorTheme: ProgressIndicatorThemeData(
+        circularTrackColor: Colors.white12,
       ),
 
       // ========================
@@ -126,6 +140,7 @@ class AppTheme {
           blur: 20,
           radius: 30,
           backgroundAlpha: 0.08,
+          imageAlpha: 0.6,
           borderAlpha: 0.15,
           glowAlpha: 0.25,
           shadowAlpha: 0.3,
@@ -134,15 +149,30 @@ class AppTheme {
           primaryGradient: LinearGradient(
             colors: [Color(0xff00c6ff), Color(0xff0072ff)],
           ),
-          backgroundGradient: const LinearGradient(
+          secondaryGradient: LinearGradient(
             colors: [Color(0xff141E30), Color(0xff243B55)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
+          ),
+          otherGradient: LinearGradient(
+            colors: [Color(0xff0f2027), Color(0xff203a43), Color(0xff2c5364)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          bgImageGradient: LinearGradient(
+            colors: [Color(0xff00c6ff), Color(0xff0072ff)],
           ),
           riskLowColor: Color(0xFF00E676),
           riskMediumColor: Color(0xFFFFA726),
           riskHighColor: Color(0xFFFF5252),
           descriptionTextColor: Colors.white70,
+          classificationTextColor: Colors.greenAccent,
+          badResultColor: Colors.redAccent,
+          goodResultColor: Colors.greenAccent,
+          white38Color: Colors.white38,
+          bgImageColor: Color(0xff00c6ff),
+          transparentColor: Colors.transparent,
+          white54Color: Colors.white54,
         ),
       ],
     );

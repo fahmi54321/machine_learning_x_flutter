@@ -2,6 +2,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:machine_learning_x_flutter/presentation/core/theme/app_glass_theme.dart';
 import 'package:provider/provider.dart';
 
 import 'package:machine_learning_x_flutter/injection/injection.dart';
@@ -37,6 +38,8 @@ class FoodVisionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final glass = Theme.of(context).extension<AppGlassTheme>()!;
+    final theme = Theme.of(context);
     return Scaffold(
       body: Stack(
         children: [
@@ -47,14 +50,19 @@ class FoodVisionPage extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(30),
                 child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+                  filter: ImageFilter.blur(
+                    sigmaX: glass.sigmaX,
+                    sigmaY: glass.sigmaY,
+                  ),
                   child: Container(
                     width: 700,
                     padding: const EdgeInsets.all(36),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.08),
+                      color: theme.colorScheme.surface.withValues(
+                        alpha: glass.backgroundAlpha,
+                      ),
                       borderRadius: BorderRadius.circular(30),
-                      border: Border.all(color: Colors.white24),
+                      border: Border.all(color: theme.colorScheme.outline),
                     ),
                     child: Column(
                       children: [

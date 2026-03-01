@@ -1,18 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:machine_learning_x_flutter/presentation/core/theme/app_glass_theme.dart';
 
 class BgFood extends StatelessWidget {
   const BgFood({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [Color(0xff0f2027), Color(0xff203a43), Color(0xff2c5364)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-      ),
-    );
+    final glass = Theme.of(context).extension<AppGlassTheme>()!;
+    return Container(decoration: BoxDecoration(gradient: glass.otherGradient));
   }
 }

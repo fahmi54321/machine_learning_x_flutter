@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:machine_learning_x_flutter/presentation/core/form/form_value.dart';
+import 'package:machine_learning_x_flutter/presentation/core/theme/app_glass_theme.dart';
 import 'package:machine_learning_x_flutter/presentation/pages/food_vision/provider/food_vision_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -9,6 +10,8 @@ class InputFood extends StatelessWidget {
   const InputFood({super.key});
 
   void _openImageSourceMenu(BuildContext context) {
+    final theme = Theme.of(context);
+    final glass = Theme.of(context).extension<AppGlassTheme>()!;
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -22,11 +25,13 @@ class InputFood extends StatelessWidget {
               height: 300,
               padding: const EdgeInsets.fromLTRB(30, 16, 30, 30),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.08),
+                color: theme.colorScheme.surface.withValues(
+                  alpha: glass.backgroundAlpha,
+                ),
                 borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(30),
                 ),
-                border: Border.all(color: Colors.white24),
+                border: Border.all(color: theme.colorScheme.outline),
               ),
               child: Column(
                 children: [
@@ -34,20 +39,16 @@ class InputFood extends StatelessWidget {
                     width: 50,
                     height: 5,
                     decoration: BoxDecoration(
-                      color: Colors.white38,
+                      color: glass.white38Color,
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
 
                   const SizedBox(height: 20),
 
-                  const Text(
+                  Text(
                     "Select Image Source",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: theme.textTheme.titleLarge?.copyWith(fontSize: 20.0),
                   ),
 
                   const SizedBox(height: 35),
@@ -102,6 +103,8 @@ class InputFood extends StatelessWidget {
             ValidationStatus.error
         ? "True Label tidak boleh kosong"
         : null;
+    final theme = Theme.of(context);
+    final glass = Theme.of(context).extension<AppGlassTheme>()!;
 
     return Column(
       children: [
@@ -113,26 +116,26 @@ class InputFood extends StatelessWidget {
             height: 200,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.white24),
-              color: Colors.white.withValues(alpha: 0.05),
+              border: Border.all(color: theme.colorScheme.outline),
+              color: theme.colorScheme.surface.withValues(
+                alpha: glass.backgroundAlpha,
+              ),
             ),
             child: selectedImage != null
                 ? ClipRRect(
                     borderRadius: BorderRadius.circular(20),
                     child: Image.file(selectedImage, fit: BoxFit.cover),
                   )
-                : const Column(
+                : Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
-                        Icons.upload_rounded,
-                        size: 40,
-                        color: Colors.white70,
-                      ),
+                      Icon(Icons.upload_rounded, size: 40.0),
                       SizedBox(height: 10),
                       Text(
                         "Upload Image",
-                        style: TextStyle(color: Colors.white70),
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: Colors.white70,
+                        ),
                       ),
                     ],
                   ),
@@ -142,16 +145,8 @@ class InputFood extends StatelessWidget {
         const SizedBox(height: 20),
 
         TextFormField(
-          style: const TextStyle(color: Colors.white),
           decoration: InputDecoration(
             hintText: "Masukkan True Label",
-            hintStyle: const TextStyle(color: Colors.white54),
-            filled: true,
-            fillColor: Colors.white.withValues(alpha: 0.06),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide.none,
-            ),
             errorText: errorText,
           ),
 
@@ -226,6 +221,8 @@ class _ImageSourceItemState extends State<_ImageSourceItem>
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final glass = Theme.of(context).extension<AppGlassTheme>()!;
     return GestureDetector(
       onTapDown: (_) => setState(() => _isPressed = true),
       onTapUp: (_) => setState(() => _isPressed = false),
@@ -243,25 +240,29 @@ class _ImageSourceItemState extends State<_ImageSourceItem>
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                gradient: const LinearGradient(
-                  colors: [Color(0xff00c6ff), Color(0xff0072ff)],
-                ),
+                gradient: glass.bgImageGradient,
                 boxShadow: [
                   if (_isPressed)
                     BoxShadow(
-                      color: const Color(0xff00c6ff).withValues(alpha: 0.6),
+                      color: glass.bgImageColor.withValues(
+                        alpha: glass.imageAlpha,
+                      ),
                       blurRadius: 25,
                       spreadRadius: 4,
                     ),
                 ],
               ),
-              child: Icon(widget.icon, color: Colors.white, size: 30),
+              child: Icon(
+                widget.icon,
+                color: theme.colorScheme.surface,
+                size: 30,
+              ),
             ),
             const SizedBox(height: 12),
             Text(
               widget.label,
-              style: const TextStyle(
-                color: Colors.white,
+
+              style: theme.textTheme.bodyMedium?.copyWith(
                 fontWeight: FontWeight.w500,
               ),
             ),

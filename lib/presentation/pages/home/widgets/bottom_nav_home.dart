@@ -2,6 +2,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:machine_learning_x_flutter/presentation/core/theme/app_glass_theme.dart';
 import 'package:machine_learning_x_flutter/presentation/pages/food_vision/food_vision_page.dart';
 import 'package:provider/provider.dart';
 
@@ -12,18 +13,22 @@ class BottomNavHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final glass = Theme.of(context).extension<AppGlassTheme>()!;
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.all(16),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(25),
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
+          filter: ImageFilter.blur(sigmaX: glass.sigmaX, sigmaY: glass.sigmaY),
           child: Container(
             height: 70,
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.08),
+              color: theme.colorScheme.surface.withValues(
+                alpha: glass.backgroundAlpha,
+              ),
               borderRadius: BorderRadius.circular(25),
-              border: Border.all(color: Colors.white24),
+              border: Border.all(color: theme.colorScheme.outline),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -43,12 +48,15 @@ class BottomNavHome extends StatelessWidget {
                   },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(Icons.grid_view, color: Colors.white),
+                    children: [
+                      Icon(Icons.grid_view, color: theme.colorScheme.surface),
                       SizedBox(height: 4),
                       Text(
                         "More",
-                        style: TextStyle(fontSize: 11, color: Colors.white),
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: theme.colorScheme.surface,
+                        ),
                       ),
                     ],
                   ),
@@ -62,9 +70,11 @@ class BottomNavHome extends StatelessWidget {
   }
 
   void _openMoreMenu({required BuildContext context}) {
+    final glass = Theme.of(context).extension<AppGlassTheme>()!;
+    final theme = Theme.of(context);
     showModalBottomSheet(
       context: context,
-      backgroundColor: Colors.transparent,
+      backgroundColor: glass.transparentColor,
       isScrollControlled: true,
       builder: (_) {
         return ClipRRect(
@@ -75,21 +85,19 @@ class BottomNavHome extends StatelessWidget {
               height: 420,
               padding: const EdgeInsets.all(30),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.08),
+                color: theme.colorScheme.surface.withValues(
+                  alpha: glass.backgroundAlpha,
+                ),
                 borderRadius: const BorderRadius.vertical(
                   top: Radius.circular(30),
                 ),
-                border: Border.all(color: Colors.white24),
+                border: Border.all(color: theme.colorScheme.outline),
               ),
               child: Column(
                 children: [
-                  const Text(
+                  Text(
                     "More Features",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: theme.textTheme.titleLarge?.copyWith(fontSize: 22.0),
                   ),
 
                   const SizedBox(height: 25),
@@ -172,20 +180,24 @@ class _GridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final glass = Theme.of(context).extension<AppGlassTheme>()!;
+    final theme = Theme.of(context);
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: Colors.white.withValues(alpha: 0.12),
+          color: theme.colorScheme.surface.withValues(
+            alpha: glass.backgroundAlpha,
+          ),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, color: Colors.white),
             const SizedBox(height: 10),
-            Text(label, style: const TextStyle(color: Colors.white)),
+            Text(label, style: theme.textTheme.bodySmall),
           ],
         ),
       ),
@@ -206,6 +218,8 @@ class _NavItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentIndex = context.watch<HomeProvider>().state.currentIndex;
+    final glass = Theme.of(context).extension<AppGlassTheme>()!;
+    final theme = Theme.of(context);
 
     final isActive = currentIndex == index;
     return GestureDetector(
@@ -218,19 +232,24 @@ class _NavItem extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
           color: isActive
-              ? Colors.white.withValues(alpha: 0.15)
-              : Colors.transparent,
+              ? theme.colorScheme.surface.withValues(alpha: glass.borderAlpha)
+              : glass.transparentColor,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, color: isActive ? Colors.white : Colors.white54),
+            Icon(
+              icon,
+              color: isActive
+                  ? theme.colorScheme.onSurface
+                  : glass.white54Color,
+            ),
             const SizedBox(height: 4),
             Text(
               label,
-              style: TextStyle(
-                fontSize: 11,
-                color: isActive ? Colors.white : Colors.white54,
+              style: theme.textTheme.bodySmall?.copyWith(
+                fontSize: 11.0,
+                color: glass.white54Color,
               ),
             ),
           ],

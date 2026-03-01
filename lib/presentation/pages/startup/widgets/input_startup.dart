@@ -69,18 +69,7 @@ class _Input extends StatelessWidget {
       width: 220,
       child: TextFormField(
         keyboardType: TextInputType.number,
-        style: const TextStyle(color: Colors.white),
-        decoration: InputDecoration(
-          hintText: hint,
-          hintStyle: const TextStyle(color: Colors.white70),
-          filled: true,
-          fillColor: Colors.white.withValues(alpha: 0.12),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-            borderSide: BorderSide.none,
-          ),
-          errorText: errorText,
-        ),
+        decoration: InputDecoration(hintText: hint, errorText: errorText),
         onChanged: onChanged,
       ),
     );
@@ -98,22 +87,12 @@ class _Dropdown extends StatelessWidget {
       width: 220,
       child: DropdownButtonFormField<String>(
         initialValue: initialValue,
-        dropdownColor: const Color(0xff203a43),
         items: const [
           DropdownMenuItem(value: 'California', child: Text('California')),
           DropdownMenuItem(value: 'New York', child: Text('New York')),
           DropdownMenuItem(value: 'Florida', child: Text('Florida')),
         ],
         onChanged: onChanged,
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: Colors.white.withValues(alpha: 0.12),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
-            borderSide: BorderSide.none,
-          ),
-        ),
-        style: const TextStyle(color: Colors.white),
       ),
     );
   }

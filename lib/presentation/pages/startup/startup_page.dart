@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:machine_learning_x_flutter/presentation/core/theme/app_glass_theme.dart';
 import 'package:machine_learning_x_flutter/presentation/pages/startup/provider/startup_provider.dart';
 import 'package:machine_learning_x_flutter/presentation/pages/startup/widgets/button_startup.dart';
 import 'package:machine_learning_x_flutter/presentation/pages/startup/widgets/input_startup.dart';
@@ -31,22 +32,12 @@ class StartupPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final glass = Theme.of(context).extension<AppGlassTheme>()!;
+    final theme = Theme.of(context);
     return Scaffold(
       body: Stack(
         children: [
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xff0f2027),
-                  Color(0xff203a43),
-                  Color(0xff2c5364),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
-          ),
+          Container(decoration: BoxDecoration(gradient: glass.otherGradient)),
 
           Center(
             child: SingleChildScrollView(
@@ -54,14 +45,19 @@ class StartupPage extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(28),
                 child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 14, sigmaY: 14),
+                  filter: ImageFilter.blur(
+                    sigmaX: glass.sigmaX,
+                    sigmaY: glass.sigmaY,
+                  ),
                   child: Container(
                     width: 820,
                     padding: const EdgeInsets.all(32),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.08),
+                      color: theme.colorScheme.surface.withValues(
+                        alpha: glass.backgroundAlpha,
+                      ),
                       borderRadius: BorderRadius.circular(28),
-                      border: Border.all(color: Colors.white30),
+                      border: Border.all(color: theme.colorScheme.outline),
                     ),
                     child: Column(
                       children: [

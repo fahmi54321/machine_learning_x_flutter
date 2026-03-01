@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:machine_learning_x_flutter/presentation/core/theme/app_glass_theme.dart';
 import 'package:machine_learning_x_flutter/presentation/pages/startup/provider/startup_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -27,36 +28,40 @@ class ResultStartup extends StatelessWidget {
         .state
         .startupEntity
         ?.recommendation;
-    return (profit ?? 0) > 0
+    final theme = Theme.of(context);
+    final glass = Theme.of(context).extension<AppGlassTheme>()!;
+    return (profit ?? 0) <= 0
         ? Column(
             key: ValueKey(profit),
             children: [
               Text(
                 '\$${profit?.toStringAsFixed(2)}',
-                style: const TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+                style: theme.textTheme.titleLarge?.copyWith(fontSize: 32.0),
               ),
               const SizedBox(height: 6),
               Text(
                 classification ?? '-',
-                style: const TextStyle(
-                  color: Colors.greenAccent,
-                  fontWeight: FontWeight.w600,
+
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: glass.classificationTextColor,
                 ),
               ),
               const SizedBox(height: 12),
               Text(
                 description ?? '-',
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.white70),
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: glass.descriptionTextColor,
+                ),
               ),
               const SizedBox(height: 16),
               ...(recommendations ?? []).map(
-                (e) =>
-                    Text('• $e', style: const TextStyle(color: Colors.white70)),
+                (e) => Text(
+                  '• $e',
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: glass.descriptionTextColor,
+                  ),
+                ),
               ),
             ],
           )

@@ -5,13 +5,10 @@ class TitleFashion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Text(
+    final theme = Theme.of(context);
+    return Text(
       'Fashion MNIST Predictor',
-      style: TextStyle(
-        fontSize: 30,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-      ),
+      style: theme.textTheme.titleLarge,
       textAlign: TextAlign.center,
     );
   }

@@ -3,19 +3,8 @@ import 'package:machine_learning_x_flutter/presentation/core/widgets/button/glas
 import 'package:machine_learning_x_flutter/presentation/pages/insurance/provider/insurance_provider.dart';
 import 'package:provider/provider.dart';
 
-class BtnInsurance extends StatefulWidget {
+class BtnInsurance extends StatelessWidget {
   const BtnInsurance({super.key});
-
-  @override
-  State<BtnInsurance> createState() => _BtnInsuranceState();
-}
-
-class _BtnInsuranceState extends State<BtnInsurance> {
-  bool isPressed = false;
-
-  void setPressed(bool value) {
-    setState(() => isPressed = value);
-  }
 
   @override
   Widget build(BuildContext context) {
