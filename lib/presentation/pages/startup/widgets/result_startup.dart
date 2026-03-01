@@ -30,7 +30,7 @@ class ResultStartup extends StatelessWidget {
         ?.recommendation;
     final theme = Theme.of(context);
     final glass = Theme.of(context).extension<AppGlassTheme>()!;
-    return (profit ?? 0) <= 0
+    return (profit ?? 0) > 0
         ? Column(
             key: ValueKey(profit),
             children: [
